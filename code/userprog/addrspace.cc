@@ -19,9 +19,12 @@
 #include "system.h"
 #include "addrspace.h"
 #include "noff.h"
+#include "memorymanager.h"
 #ifdef HOST_SPARC
 #include <strings.h>
 #endif
+
+extern MemoryManager *memorymanager;
 
 //----------------------------------------------------------------------
 // SwapHeader
@@ -60,63 +63,186 @@ SwapHeader (NoffHeader *noffH)
 //	"executable" is the file containing the object code to load into memory
 //----------------------------------------------------------------------
 
+
+
+// New constuctor written by me
 AddrSpace::AddrSpace(OpenFile *executable)
 {
+    printf("In Nafee's constuctor of AddrSpace\n");
     NoffHeader noffH;
     unsigned int i, size;
 
     executable->ReadAt((char *)&noffH, sizeof(noffH), 0);
     if ((noffH.noffMagic != NOFFMAGIC) && 
-		(WordToHost(noffH.noffMagic) == NOFFMAGIC))
-    	SwapHeader(&noffH);
+        (WordToHost(noffH.noffMagic) == NOFFMAGIC))
+        SwapHeader(&noffH);
     ASSERT(noffH.noffMagic == NOFFMAGIC);
 
 // how big is address space?
     size = noffH.code.size + noffH.initData.size + noffH.uninitData.size 
-			+ UserStackSize;	// we need to increase the size
-						// to leave room for the stack
+            + UserStackSize;    // we need to increase the size
+                        // to leave room for the stack
     numPages = divRoundUp(size, PageSize);
     size = numPages * PageSize;
 
-    ASSERT(numPages <= NumPhysPages);		// check we're not trying
-						// to run anything too big --
-						// at least until we have
-						// virtual memory
+    ASSERT(numPages <= NumPhysPages);       // check we're not trying
+                        // to run anything too big --
+                        // at least until we have
+                        // virtual memory
 
+    if ( memorymanager->HowManyPageFree() < numPages )
+    {
+        printf("not enough memory free\n");
+        return;
+    }
+    
     DEBUG('a', "Initializing address space, num pages %d, size %d\n", 
-					numPages, size);
+                    numPages, size);
+
+
+
 // first, set up the translation 
     pageTable = new TranslationEntry[numPages];
     for (i = 0; i < numPages; i++) {
-	pageTable[i].virtualPage = i;	// for now, virtual page # = phys page #
-	pageTable[i].physicalPage = i;
-	pageTable[i].valid = TRUE;
-	pageTable[i].use = FALSE;
-	pageTable[i].dirty = FALSE;
-	pageTable[i].readOnly = FALSE;  // if the code segment was entirely on 
-					// a separate page, we could set its 
-					// pages to be read-only
+    pageTable[i].virtualPage = i;   // for now, virtual page # = phys page #
+    pageTable[i].physicalPage = memorymanager->AllocPage();
+    pageTable[i].valid = TRUE;
+    pageTable[i].use = FALSE;
+    pageTable[i].dirty = FALSE;
+    pageTable[i].readOnly = FALSE;  // if the code segment was entirely on 
+                    // a separate page, we could set its 
+                    // pages to be read-only
     }
+
+    printf("Page table initialized\n");
+    printf(" machine->pageTable = %d \n", machine->pageTable);
     
 // zero out the entire address space, to zero the unitialized data segment 
 // and the stack segment
-    bzero(machine->mainMemory, size);
+    for (i = 0; i < numPages; i++)
+    {
+        bzero(machine->mainMemory + pageTable[i].physicalPage * PageSize, 
+            PageSize);
+    }
+    
+    printf("zeroed out the address space\n");
+
+    // I need to restore state now as I will use the function WriteMem
+    RestoreState();
+
+    int cs = noffH.code.virtualAddr;
+    int codeSegmentSize = noffH.code.size;
+    int fs = noffH.code.inFileAddr;
+    for (i = 0; i < codeSegmentSize; i++)
+    {
+        char ch;
+        executable->ReadAt(&ch, 1, fs);
+        machine->WriteMem(ch, 1, cs);
+        cs++;
+        fs++;   
+    }
+
+    printf("Written the code segment to the memory\n");
+
+
+    int ds = noffH.initData.virtualAddr;
+    int dataSegmentSize = noffH.initData.size;
+    fs = noffH.initData.inFileAddr;
+    for (i = 0; i < dataSegmentSize; i++)
+    {
+        char ch;
+        executable->ReadAt(&ch, 1, fs);
+        machine->WriteMem(ch, 1, ds);
+        ds++;
+        fs++;
+
+    }
+
+
 
 // then, copy in the code and data segments into memory
-    if (noffH.code.size > 0) {
-        DEBUG('a', "Initializing code segment, at 0x%x, size %d\n", 
-			noffH.code.virtualAddr, noffH.code.size);
-        executable->ReadAt(&(machine->mainMemory[noffH.code.virtualAddr]),
-			noffH.code.size, noffH.code.inFileAddr);
-    }
-    if (noffH.initData.size > 0) {
-        DEBUG('a', "Initializing data segment, at 0x%x, size %d\n", 
-			noffH.initData.virtualAddr, noffH.initData.size);
-        executable->ReadAt(&(machine->mainMemory[noffH.initData.virtualAddr]),
-			noffH.initData.size, noffH.initData.inFileAddr);
-    }
+    // if (noffH.code.size > 0) {
+    //     DEBUG('a', "Initializing code segment, at 0x%x, size %d\n", 
+    //         noffH.code.virtualAddr, noffH.code.size);
+    //     executable->ReadAt(&(machine->mainMemory[noffH.code.virtualAddr]),
+    //         noffH.code.size, noffH.code.inFileAddr);
+    // }
+    // if (noffH.initData.size > 0) {
+    //     DEBUG('a', "Initializing data segment, at 0x%x, size %d\n", 
+    //         noffH.initData.virtualAddr, noffH.initData.size);
+    //     executable->ReadAt(&(machine->mainMemory[noffH.initData.virtualAddr]),
+    //         noffH.initData.size, noffH.initData.inFileAddr);
+    // }
 
+
+    printf("At the end of the Nafee's constructor funtion of AddrSpace\n");
 }
+
+
+
+
+// this the old constructor of AddrSpace
+// AddrSpace::AddrSpace(OpenFile *executable)
+// {
+//     NoffHeader noffH;
+//     unsigned int i, size;
+
+//     executable->ReadAt((char *)&noffH, sizeof(noffH), 0);
+//     if ((noffH.noffMagic != NOFFMAGIC) && 
+// 		(WordToHost(noffH.noffMagic) == NOFFMAGIC))
+//     	SwapHeader(&noffH);
+//     ASSERT(noffH.noffMagic == NOFFMAGIC);
+
+// // how big is address space?
+//     size = noffH.code.size + noffH.initData.size + noffH.uninitData.size 
+// 			+ UserStackSize;	// we need to increase the size
+// 						// to leave room for the stack
+//     numPages = divRoundUp(size, PageSize);
+//     size = numPages * PageSize;
+
+//     ASSERT(numPages <= NumPhysPages);		// check we're not trying
+// 						// to run anything too big --
+// 						// at least until we have
+// 						// virtual memory
+
+//     DEBUG('a', "Initializing address space, num pages %d, size %d\n", 
+// 					numPages, size);
+// // first, set up the translation 
+//     pageTable = new TranslationEntry[numPages];
+//     for (i = 0; i < numPages; i++) {
+// 	pageTable[i].virtualPage = i;	// for now, virtual page # = phys page #
+// 	pageTable[i].physicalPage = i;
+// 	pageTable[i].valid = TRUE;
+// 	pageTable[i].use = FALSE;
+// 	pageTable[i].dirty = FALSE;
+// 	pageTable[i].readOnly = FALSE;  // if the code segment was entirely on 
+// 					// a separate page, we could set its 
+// 					// pages to be read-only
+//     }
+
+//     printf("machine->pageTable = %d  \n", machine->pageTable);
+    
+// // zero out the entire address space, to zero the unitialized data segment 
+// // and the stack segment
+//     bzero(machine->mainMemory, size);
+
+// // then, copy in the code and data segments into memory
+//     if (noffH.code.size > 0) {
+//         DEBUG('a', "Initializing code segment, at 0x%x, size %d\n", 
+// 			noffH.code.virtualAddr, noffH.code.size);
+//         executable->ReadAt(&(machine->mainMemory[noffH.code.virtualAddr]),
+// 			noffH.code.size, noffH.code.inFileAddr);
+//     }
+//     if (noffH.initData.size > 0) {
+//         DEBUG('a', "Initializing data segment, at 0x%x, size %d\n", 
+// 			noffH.initData.virtualAddr, noffH.initData.size);
+//         executable->ReadAt(&(machine->mainMemory[noffH.initData.virtualAddr]),
+// 			noffH.initData.size, noffH.initData.inFileAddr);
+//     }
+
+//     printf("At the end of the Given constructor funtion of AddrSpace\n");
+
+// }
 
 //----------------------------------------------------------------------
 // AddrSpace::~AddrSpace
@@ -181,6 +307,7 @@ void AddrSpace::SaveState()
 
 void AddrSpace::RestoreState() 
 {
+    printf("Inside void AddrSpace::RestoreState()   \n");
     machine->pageTable = pageTable;
     machine->pageTableSize = numPages;
 }

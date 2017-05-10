@@ -10,9 +10,11 @@ MemoryManager::MemoryManager(int numpages)
 
 MemoryManager::~ MemoryManager()
 {
+	lock->Acquire();
 	this->numpages = 0;
-	delete lock;
 	delete bitmap;
+	lock->Release();
+	delete lock;
 }
 
 int MemoryManager::AllocPage()
@@ -36,4 +38,9 @@ bool MemoryManager::IsPageAllocated(int physPageNum)
 	bool ret = bitmap->Test(physPageNum);
 	lock->Release();
 	return ret;
+}
+
+int MemoryManager::HowManyPageFree()
+{
+	return bitmap->NumClear();
 }

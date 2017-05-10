@@ -12,6 +12,7 @@ class MemoryManager
 		int AllocPage();
 		void FreePage(int physPageNum);
 		bool IsPageAllocated(int physPageNum); 
+		int HowManyPageFree();
 	private:
 		int numpages;
 		Lock *lock;
