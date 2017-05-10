@@ -13,6 +13,9 @@
 #include "console.h"
 #include "addrspace.h"
 #include "synch.h"
+#include "memorymanager.h"
+
+static MemoryManager *memorymanager;
 
 //----------------------------------------------------------------------
 // StartProcess
