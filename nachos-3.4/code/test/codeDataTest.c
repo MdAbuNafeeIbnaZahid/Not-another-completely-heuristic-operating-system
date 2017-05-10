@@ -1,5 +1,4 @@
-#include <stdio.h>
-using namespace std;
+
 int ar[5];
 
 
@@ -11,9 +10,6 @@ int main()
 	{
 		ar[i] = i;
 	}
-	for (i = 0; i < 5; i++)
-	{
-		printf("%d \n", ar[i]);
-	}
+	
 	return 0;
 }

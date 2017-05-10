@@ -246,6 +246,13 @@ AddrSpace::AddrSpace(OpenFile *executable)
 
 AddrSpace::~AddrSpace()
 {
+    int i, j;
+    for (i = 0; i < numPages; i++)
+    {
+        int physicalPageFrameNum = pageTable[i].physicalPage;
+        memorymanager->FreePage( physicalPageFrameNum );
+        //printf("Freeing a page\n");
+    }
    delete pageTable;
 }
 
