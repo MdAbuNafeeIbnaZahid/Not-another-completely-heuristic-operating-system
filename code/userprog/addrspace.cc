@@ -127,19 +127,16 @@ AddrSpace::AddrSpace(OpenFile *executable)
     
     printf("zeroed out the address space\n");
 
-    // I need to restore state now as I will use the function WriteMem
-    RestoreState();
 
     int cs = noffH.code.virtualAddr;
     int codeSegmentSize = noffH.code.size;
     int fs = noffH.code.inFileAddr;
     for (i = 0; i < codeSegmentSize; i++)
     {
-        char ch;
-        executable->ReadAt(&ch, 1, fs);
-        machine->WriteMem(ch, 1, cs);
-        cs++;
-        fs++;   
+        int virtualAddress = cs + i;
+        int physicalAddress = virtualAddressToPhysicalAddress( virtualAddress );
+        executable->ReadAt(&(machine->mainMemory[physicalAddress]),
+            1, fs+i);  
     }
 
     printf("Written the code segment to the memory\n");
@@ -150,12 +147,10 @@ AddrSpace::AddrSpace(OpenFile *executable)
     fs = noffH.initData.inFileAddr;
     for (i = 0; i < dataSegmentSize; i++)
     {
-        char ch;
-        executable->ReadAt(&ch, 1, fs);
-        machine->WriteMem(ch, 1, ds);
-        ds++;
-        fs++;
-
+        int virtualAddress = ds + i;
+        int physicalAddress = virtualAddressToPhysicalAddress( virtualAddress );
+        executable->ReadAt(&(machine->mainMemory[physicalAddress]),
+            1, fs+i);  
     }
 
 
@@ -310,4 +305,13 @@ void AddrSpace::RestoreState()
     printf("Inside void AddrSpace::RestoreState()   \n");
     machine->pageTable = pageTable;
     machine->pageTableSize = numPages;
+}
+
+
+int AddrSpace::virtualAddressToPhysicalAddress(int virtualAddress)
+{
+    int virtualPageNum = virtualAddress / PageSize;
+    int physicalPageFrameNum = pageTable[virtualPageNum].physicalPage;
+    int offsetInFrame = virtualAddress % PageSize;
+    int physicalAddress = physicalPageFrameNum * PageSize + offsetInFrame;
 }
