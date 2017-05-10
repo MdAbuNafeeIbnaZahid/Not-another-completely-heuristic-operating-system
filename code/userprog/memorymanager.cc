@@ -4,7 +4,7 @@ MemoryManager::MemoryManager(int numpages)
 {
 	this->numpages = numpages;
 	lock = new Lock("Lock of memory manager");
-	bitmap = new Bitmap(numpages);
+	bitmap = new BitMap(numpages);
 }
 
 

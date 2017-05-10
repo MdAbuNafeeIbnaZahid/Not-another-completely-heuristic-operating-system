@@ -15,7 +15,7 @@ class MemoryManager
 	private:
 		int numpages;
 		Lock *lock;
-		Bitmap *bitmap;
+		BitMap *bitmap;
 };
 
 #endif

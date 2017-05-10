@@ -26,6 +26,8 @@ static MemoryManager *memorymanager;
 void
 StartProcess(char *filename)
 {
+    memorymanager = new MemoryManager(NumPhysPages);
+    
     OpenFile *executable = fileSystem->Open(filename);
     AddrSpace *space;
 
