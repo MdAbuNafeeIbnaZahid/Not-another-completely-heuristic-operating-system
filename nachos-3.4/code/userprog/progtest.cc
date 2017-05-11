@@ -14,8 +14,10 @@
 #include "addrspace.h"
 #include "synch.h"
 #include "memorymanager.h"
+#include "threadSafeSynchronizedConsole.h"
 
 MemoryManager *memorymanager;
+ThreadSafeSynchronizedConsole *threadSafeSynchronizedConsole;
 
 //----------------------------------------------------------------------
 // StartProcess
@@ -49,6 +51,9 @@ StartProcess(char *filename)
     printf("Before \" space->RestoreState(); \" in progtest.cc \n");
     space->RestoreState();		// load page table register
     printf("After \" space->RestoreState(); \" in progtest.cc \n");
+
+    // Nafee : Creating an instance of ThreadSafeSynchronizedConsole
+    threadSafeSynchronizedConsole = new ThreadSafeSynchronizedConsole();
 
     machine->Run();			// jump to the user progam
     ASSERT(FALSE);			// machine->Run never returns;

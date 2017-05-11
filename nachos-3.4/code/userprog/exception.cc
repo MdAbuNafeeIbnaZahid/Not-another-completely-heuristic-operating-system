@@ -54,10 +54,36 @@ ExceptionHandler(ExceptionType which)
     int type = machine->ReadRegister(2);
 
     if ((which == SyscallException) && (type == SC_Halt)) {
-	DEBUG('a', "Shutdown, initiated by user program.\n");
-   	interrupt->Halt();
-    } else {
-	printf("Unexpected user mode exception %d %d\n", which, type);
-	ASSERT(FALSE);
+		DEBUG('a', "Shutdown, initiated by user program.\n");
+	   	interrupt->Halt();
+    }
+    else if ( (which == SyscallException) && (type == SC_Write) )
+    {
+    	printf("Write called \n" );
+    	char *buf = (char *) machine->ReadRegister(4);
+    	int size = machine->ReadRegister(5);
+    	OpenFileId id = machine->ReadRegister(6);
+    	if ( id != 0 )
+    	{
+    		printf(" file I/O not implemented  \n");
+    		ASSERT(FALSE);
+    	}
+    }
+    else if ( (which == SyscallException) && (type == SC_Read) )
+    {
+    	printf("Read called \n" );
+    	char *buf = (char *) machine->ReadRegister(4);
+    	int size = machine->ReadRegister(5);
+    	OpenFileId id = machine->ReadRegister(6);
+    	if ( id != 0 )
+    	{
+    		printf(" file I/O not implemented  \n");
+    		ASSERT(FALSE);
+    	}
+    }
+     else 
+     {
+		printf("Unexpected user mode exception %d %d\n", which, type);
+		ASSERT(FALSE);
     }
 }

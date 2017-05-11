@@ -11,5 +11,5 @@ int main()
 		ar[i] = i;
 	}
 	
-	return 0;
+	Halt();
 }
