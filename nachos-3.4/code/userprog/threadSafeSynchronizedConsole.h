@@ -13,6 +13,8 @@ class ThreadSafeSynchronizedConsole
 		char GetChar();
 		void UpConsoleReadSemaphore();
 		void UpConsoleWriteSemaphore();
+		void AcquireConsoleLock();
+		void ReleaseConcoleLock();
 	private:
 		Lock *consoleLock;
 		Semaphore *consoleReadSemaphore;

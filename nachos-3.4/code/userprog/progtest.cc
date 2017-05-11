@@ -17,7 +17,7 @@
 #include "threadSafeSynchronizedConsole.h"
 
 MemoryManager *memorymanager;
-ThreadSafeSynchronizedConsole *threadSafeSynchronizedConsole;
+//ThreadSafeSynchronizedConsole *threadSafeSynchronizedConsole;
 
 //----------------------------------------------------------------------
 // StartProcess
@@ -53,7 +53,7 @@ StartProcess(char *filename)
     printf("After \" space->RestoreState(); \" in progtest.cc \n");
 
     // Nafee : Creating an instance of ThreadSafeSynchronizedConsole
-    threadSafeSynchronizedConsole = new ThreadSafeSynchronizedConsole();
+    //threadSafeSynchronizedConsole = new ThreadSafeSynchronizedConsole();
 
     machine->Run();			// jump to the user progam
     ASSERT(FALSE);			// machine->Run never returns;

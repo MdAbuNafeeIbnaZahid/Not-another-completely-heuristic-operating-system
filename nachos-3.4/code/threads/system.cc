@@ -7,6 +7,7 @@
 
 #include "copyright.h"
 #include "system.h"
+#include "threadSafeSynchronizedConsole.h"
 
 // This defines *all* of the global data structures used by Nachos.
 // These are all initialized and de-allocated by this file.
@@ -15,6 +16,11 @@ Thread *currentThread;			// the thread we are running now
 Thread *threadToBeDestroyed;  		// the thread that just finished
 Scheduler *scheduler;			// the ready list
 Interrupt *interrupt;			// interrupt status
+
+// Nafee : 
+ThreadSafeSynchronizedConsole *threadSafeSynchronizedConsole;
+
+
 Statistics *stats;			// performance metrics
 Timer *timer;				// the hardware timer device,
 					// for invoking context switches
@@ -133,6 +139,11 @@ Initialize(int argc, char **argv)
     stats = new Statistics();			// collect statistics
     interrupt = new Interrupt;			// start up interrupt handling
     scheduler = new Scheduler();		// initialize the ready queue
+
+    // Nafee initializing threadSafeSynchronizedConsole
+    threadSafeSynchronizedConsole = new ThreadSafeSynchronizedConsole();
+
+
     if (randomYield)				// start the timer (if needed)
 	timer = new Timer(TimerInterruptHandler, 0, randomYield);
 

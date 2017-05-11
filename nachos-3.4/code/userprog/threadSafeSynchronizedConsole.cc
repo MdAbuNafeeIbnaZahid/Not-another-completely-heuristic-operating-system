@@ -51,3 +51,13 @@ void ThreadSafeSynchronizedConsole::UpConsoleWriteSemaphore()
 {
 	consoleWriteSemaphore->V();
 }
+
+void ThreadSafeSynchronizedConsole::AcquireConsoleLock()
+{
+	consoleLock->Acquire();
+}
+
+void ThreadSafeSynchronizedConsole::ReleaseConsoleLock()
+{
+	consoleLock->Release();
+}
