@@ -63,40 +63,40 @@ ExceptionHandler(ExceptionType which)
     else if ( (which == SyscallException) && (type == SC_Write) )
     {
 
-    	printf("Write called \n" );
-    	char *buf = (char *) machine->ReadRegister(4);
-    	int size = machine->ReadRegister(5);
-    	OpenFileId id = machine->ReadRegister(6);
-    	if ( id != 0 )
-    	{
-    		printf(" file I/O not implemented  \n");
-    		ASSERT(FALSE);
-    	}
-    	int i, j, k;
-    	for (i = 0; i < size; i++)
-    	{
-    		int val;
-    		machine->ReadMem( (int)(buf+i), 1, &val);
-    		threadSafeSynchronizedConsole->PutChar( (char)val );
-    	}
+    	// printf("Write called \n" );
+    	// char *buf = (char *) machine->ReadRegister(4);
+    	// int size = machine->ReadRegister(5);
+    	// OpenFileId id = machine->ReadRegister(6);
+    	// if ( id != 0 )
+    	// {
+    	// 	printf(" file I/O not implemented  \n");
+    	// 	ASSERT(FALSE);
+    	// }
+    	// int i, j, k;
+    	// for (i = 0; i < size; i++)
+    	// {
+    	// 	int val;
+    	// 	machine->ReadMem( (int)(buf+i), 1, &val);
+    	// 	threadSafeSynchronizedConsole->PutChar( (char)val );
+    	// }
     }
     else if ( (which == SyscallException) && (type == SC_Read) )
     {
-    	printf("Read called \n" );
-    	char *buf = (char *) machine->ReadRegister(4);
-    	int size = machine->ReadRegister(5);
-    	OpenFileId id = machine->ReadRegister(6);
-    	if ( id != 0 )
-    	{
-    		printf(" file I/O not implemented  \n");
-    		ASSERT(FALSE);
-    	}
-    	int i, j, k;
-    	for (i = 0; i < size; i++)
-    	{
-    		char ch = threadSafeSynchronizedConsole->GetChar();
-    		machine->WriteMem( (int)(buf+i), 1, ch );	
-    	}
+    	// printf("Read called \n" );
+    	// char *buf = (char *) machine->ReadRegister(4);
+    	// int size = machine->ReadRegister(5);
+    	// OpenFileId id = machine->ReadRegister(6);
+    	// if ( id != 0 )
+    	// {
+    	// 	printf(" file I/O not implemented  \n");
+    	// 	ASSERT(FALSE);
+    	// }
+    	// int i, j, k;
+    	// for (i = 0; i < size; i++)
+    	// {
+    	// 	char ch = threadSafeSynchronizedConsole->GetChar();
+    	// 	machine->WriteMem( (int)(buf+i), 1, ch );	
+    	// }
     }
      else 
      {
