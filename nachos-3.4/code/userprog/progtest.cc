@@ -14,9 +14,24 @@
 #include "addrspace.h"
 #include "synch.h"
 #include "memorymanager.h"
-#include "threadSafeSynchronizedConsole.h"
+//#include "threadSafeSynchronizedConsole.h"
 
 MemoryManager *memorymanager;
+
+
+
+
+// Nafee : 
+Lock *consoleLock;
+Semaphore *consoleReadSemaphore;
+Semaphore *consoleWriteSemaphore;
+Console *myConsole;
+// Nafee 
+static void MyReadAvail(int arg) { consoleReadSemaphore->V(); }
+static void MyWriteDone(int arg) { consoleWriteSemaphore->V(); }
+
+
+
 //ThreadSafeSynchronizedConsole *threadSafeSynchronizedConsole;
 
 //----------------------------------------------------------------------
@@ -30,6 +45,13 @@ StartProcess(char *filename)
 {
     memorymanager = new MemoryManager(NumPhysPages);
 
+    consoleLock = new Lock("ThreadSafeSynchronizedConsole Lock");
+    consoleReadSemaphore = new Semaphore("consoleReadSemaphore", 0);
+    consoleWriteSemaphore = new Semaphore("consoleWriteSemaphore", 0);
+    myConsole = new Console(NULL, NULL, MyReadAvail, MyWriteDone, 0);
+    
+
+    
     OpenFile *executable = fileSystem->Open(filename);
     AddrSpace *space;
 

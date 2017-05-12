@@ -1,15 +1,16 @@
 
 int ar[5];
-
+int i, j, k;
 
 int main()
 {
 	/* code */
-	int i, j, k;
-	for (i = 0; i < 5; i++)
-	{
-		ar[i] = i;
-	}
+	Write("In codeDataTest", 5, 0);
+	
+	// for (i = 0; i < 5; i++)
+	// {
+	// 	ar[i] = i;
+	// }
 	
 	Halt();
 }

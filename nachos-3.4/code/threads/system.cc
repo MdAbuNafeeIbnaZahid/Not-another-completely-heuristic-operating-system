@@ -7,6 +7,7 @@
 
 #include "copyright.h"
 #include "system.h"
+// #include "memorymanager.h"
 // #include "threadSafeSynchronizedConsole.h"
 
 // This defines *all* of the global data structures used by Nachos.
@@ -17,8 +18,8 @@ Thread *threadToBeDestroyed;  		// the thread that just finished
 Scheduler *scheduler;			// the ready list
 Interrupt *interrupt;			// interrupt status
 
-// Nafee : 
-// ThreadSafeSynchronizedConsole *threadSafeSynchronizedConsole;
+
+//MemoryManager *memorymanager;
 
 
 Statistics *stats;			// performance metrics
@@ -40,6 +41,9 @@ Machine *machine;	// user program memory and registers
 #ifdef NETWORK
 PostOffice *postOffice;
 #endif
+
+
+
 
 
 // External definition, to allow us to take a pointer to this function
@@ -160,7 +164,12 @@ Initialize(int argc, char **argv)
     
 #ifdef USER_PROGRAM
     machine = new Machine(debugUserProg);	// this must come first
+
 #endif
+    
+
+
+
 
 #ifdef FILESYS
     synchDisk = new SynchDisk("DISK");

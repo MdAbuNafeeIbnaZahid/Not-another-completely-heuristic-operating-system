@@ -15,6 +15,9 @@
 #include "interrupt.h"
 #include "stats.h"
 #include "timer.h"
+#include "console.h"
+#include "synch.h"
+//#include "memorymanager.h"
 
 // Initialization and cleanup routines
 extern void Initialize(int argc, char **argv); 	// Initialization,
@@ -28,6 +31,9 @@ extern Scheduler *scheduler;			// the ready list
 extern Interrupt *interrupt;			// interrupt status
 extern Statistics *stats;			// performance metrics
 extern Timer *timer;				// the hardware alarm clock
+
+// Nafee
+extern Console *myConsole; 
 
 #ifdef USER_PROGRAM
 #include "machine.h"

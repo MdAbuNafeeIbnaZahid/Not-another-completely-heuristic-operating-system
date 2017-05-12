@@ -309,7 +309,7 @@ void AddrSpace::SaveState()
 
 void AddrSpace::RestoreState() 
 {
-    printf("Inside void AddrSpace::RestoreState()   \n");
+    //printf("Inside void AddrSpace::RestoreState()   \n");
     machine->pageTable = pageTable;
     machine->pageTableSize = numPages;
 }

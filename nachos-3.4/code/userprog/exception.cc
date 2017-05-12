@@ -24,6 +24,15 @@
 #include "copyright.h"
 #include "system.h"
 #include "syscall.h"
+#include "console.h"
+
+extern Lock *consoleLock;
+extern Semaphore *consoleReadSemaphore;
+extern Semaphore *consoleWriteSemaphore;
+extern Console *myConsole;
+
+
+// extern MemoryManager *memorymanager;
 
 
 //extern ThreadSafeSynchronizedConsole *threadSafeSynchronizedConsole;
@@ -54,6 +63,8 @@
 void
 ExceptionHandler(ExceptionType which)
 {
+	//printf(" memory manager has free pages %d \n", memorymanager->HowManyPageFree() );
+
     int type = machine->ReadRegister(2);
 
     if ((which == SyscallException) && (type == SC_Halt)) {
@@ -62,23 +73,33 @@ ExceptionHandler(ExceptionType which)
     }
     else if ( (which == SyscallException) && (type == SC_Write) )
     {
+    	consoleLock->Acquire();
+    	//printf("Write called \n" );
+    	char *buf = (char *) machine->ReadRegister(4);
+    	int size = machine->ReadRegister(5);
+    	OpenFileId id = machine->ReadRegister(6);
 
-    	// printf("Write called \n" );
-    	// char *buf = (char *) machine->ReadRegister(4);
-    	// int size = machine->ReadRegister(5);
-    	// OpenFileId id = machine->ReadRegister(6);
-    	// if ( id != 0 )
-    	// {
-    	// 	printf(" file I/O not implemented  \n");
-    	// 	ASSERT(FALSE);
-    	// }
-    	// int i, j, k;
-    	// for (i = 0; i < size; i++)
-    	// {
-    	// 	int val;
-    	// 	machine->ReadMem( (int)(buf+i), 1, &val);
-    	// 	threadSafeSynchronizedConsole->PutChar( (char)val );
-    	// }
+    	int currentPC = machine->ReadRegister(PCReg);
+    	if ( id != 0 )
+    	{
+    		printf(" file I/O not implemented  \n");
+    		ASSERT(FALSE);
+    	}
+    	//printf("size = %d \n", size );
+    	int i, j, k;
+    	for (i = 0; i < size; i++)
+    	{
+    		int val;
+    		machine->ReadMem( (int)(buf+i), 1, &val);
+    		myConsole->PutChar( (char)val );
+    		consoleWriteSemaphore->P();
+    	}
+    	consoleLock->Release();
+    	
+    	currentPC++;
+    	machine->WriteRegister(PCReg, currentPC);
+
+    	return;
     }
     else if ( (which == SyscallException) && (type == SC_Read) )
     {
