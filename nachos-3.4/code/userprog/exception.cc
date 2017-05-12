@@ -26,6 +26,22 @@
 #include "syscall.h"
 #include "console.h"
 
+void incrementPC()
+{
+	int prevPC = machine->ReadRegister(PrevPCReg);
+	int PC = machine->ReadRegister(PCReg);
+	int nextPC = machine->ReadRegister(NextPCReg);
+
+	prevPC = PC;
+	PC = nextPC;
+	nextPC += 4;
+
+	machine->WriteRegister(PrevPCReg, prevPC);
+	machine->WriteRegister(PCReg, PC);
+	machine->WriteRegister(NextPCReg, nextPC);
+	
+}
+
 extern Lock *consoleLock;
 extern Semaphore *consoleReadSemaphore;
 extern Semaphore *consoleWriteSemaphore;
@@ -79,7 +95,7 @@ ExceptionHandler(ExceptionType which)
     	int size = machine->ReadRegister(5);
     	OpenFileId id = machine->ReadRegister(6);
 
-    	int currentPC = machine->ReadRegister(PCReg);
+    	//int currentPC = machine->ReadRegister(PCReg);
     	if ( id != 0 )
     	{
     		printf(" file I/O not implemented  \n");
@@ -96,28 +112,35 @@ ExceptionHandler(ExceptionType which)
     	}
     	consoleLock->Release();
     	
-    	currentPC++;
-    	machine->WriteRegister(PCReg, currentPC);
+    	//currentPC++;
+    	//machine->WriteRegister(PCReg, currentPC);
 
-    	return;
+    	incrementPC();
+
+    	//return;
     }
     else if ( (which == SyscallException) && (type == SC_Read) )
     {
-    	// printf("Read called \n" );
-    	// char *buf = (char *) machine->ReadRegister(4);
-    	// int size = machine->ReadRegister(5);
-    	// OpenFileId id = machine->ReadRegister(6);
-    	// if ( id != 0 )
-    	// {
-    	// 	printf(" file I/O not implemented  \n");
-    	// 	ASSERT(FALSE);
-    	// }
-    	// int i, j, k;
-    	// for (i = 0; i < size; i++)
-    	// {
-    	// 	char ch = threadSafeSynchronizedConsole->GetChar();
-    	// 	machine->WriteMem( (int)(buf+i), 1, ch );	
-    	// }
+    	//printf("Read called \n" );
+    	consoleLock->Acquire();
+
+    	char *buf = (char *) machine->ReadRegister(4);
+    	int size = machine->ReadRegister(5);
+    	OpenFileId id = machine->ReadRegister(6);
+    	if ( id != 0 )
+    	{
+    		printf(" file I/O not implemented  \n");
+    		ASSERT(FALSE);
+    	}
+    	int i, j, k;
+    	for (i = 0; i < size; i++)
+    	{
+    		consoleReadSemaphore->P();
+			char ch = myConsole->GetChar();
+    		machine->WriteMem( (int)(buf+i), 1, ch );	
+    	}
+    	consoleLock->Release();
+    	incrementPC();
     }
      else 
      {
