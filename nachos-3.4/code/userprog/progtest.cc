@@ -14,9 +14,11 @@
 #include "addrspace.h"
 #include "synch.h"
 #include "memorymanager.h"
+#include "thread.h"
+#include "processtable.h"
 //#include "threadSafeSynchronizedConsole.h"
 
-MemoryManager *memorymanager;
+#define MAX_PROCESS_NUM 99
 
 
 
@@ -26,11 +28,12 @@ Lock *consoleLock;
 Semaphore *consoleReadSemaphore;
 Semaphore *consoleWriteSemaphore;
 Console *myConsole;
+ProcessTable *processTable;
 // Nafee 
 static void MyReadAvail(int arg) { consoleReadSemaphore->V(); }
 static void MyWriteDone(int arg) { consoleWriteSemaphore->V(); }
 
-
+MemoryManager *memorymanager;
 
 //ThreadSafeSynchronizedConsole *threadSafeSynchronizedConsole;
 
@@ -44,13 +47,14 @@ void
 StartProcess(char *filename)
 {
     memorymanager = new MemoryManager(NumPhysPages);
+    processTable = new ProcessTable(MAX_PROCESS_NUM);
 
     consoleLock = new Lock("ThreadSafeSynchronizedConsole Lock");
     consoleReadSemaphore = new Semaphore("consoleReadSemaphore", 0);
     consoleWriteSemaphore = new Semaphore("consoleWriteSemaphore", 0);
     myConsole = new Console(NULL, NULL, MyReadAvail, MyWriteDone, 0);
     
-
+    //memorymanager = new MemoryManager(NumPhysPages);
     
     OpenFile *executable = fileSystem->Open(filename);
     AddrSpace *space;

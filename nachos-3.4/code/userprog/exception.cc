@@ -26,6 +26,8 @@
 #include "syscall.h"
 #include "console.h"
 
+#define MAX_SIZE 99
+
 void incrementPC()
 {
 	int prevPC = machine->ReadRegister(PrevPCReg);
@@ -40,6 +42,38 @@ void incrementPC()
 	machine->WriteRegister(PCReg, PC);
 	machine->WriteRegister(NextPCReg, nextPC);
 	
+}
+
+int myExec(int path)
+{
+	char buffer[MAX_SIZE];
+	int i = 0;
+	do
+	{
+		int x;
+		if ( ! machine->ReadMem(path, 1, &x) )
+		{
+			return 0;
+		}
+		buffer[i] = (char) x;
+		i++;
+		path++;
+		if ( i >= MAX_SIZE )
+		{
+			printf(" File path too big  \n" );
+			return 0;
+		}
+	} while( buffer[i] );
+	OpenFile *fd = fileSystem->Open( buffer );
+	if ( fd == 0 )
+	{
+		return 0;
+	}
+	AddrSpace *addrSpace = new AddrSpace(fd);
+	Thread *thread = new Thread(buffer);
+
+	// pid = 
+
 }
 
 extern Lock *consoleLock;
@@ -141,6 +175,15 @@ ExceptionHandler(ExceptionType which)
     	}
     	consoleLock->Release();
     	incrementPC();
+    }
+    else if ( (which == SyscallException) && (type == SC_Exec) )
+    {
+    	int path = machine->ReadRegister(4);
+
+    }
+    else if ( (which == SyscallException) && (type == SC_Exit) )
+    {
+    	
     }
      else 
      {
