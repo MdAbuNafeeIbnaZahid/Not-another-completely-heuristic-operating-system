@@ -126,8 +126,30 @@ ExceptionHandler(ExceptionType which)
 
     }
     else if(which == PageFaultException){
-        printf("\nPage Fault...\n");
-        sysExitHandler(-1);
+        // printf("\nPage Fault...\n");
+        int faultingAddress = machine->ReadRegister(39);
+        // printf("\nfaultingAddress = %d\n", faultingAddress);
+        int vpn = faultingAddress / PageSize;
+        // printf("\nvpn = %d\n", vpn);
+        int physicalPageNo = -1;
+        if ( memoryManager->getNumFreePages() > 0 )
+        {
+            // printf("\n Free page is available \n");
+            physicalPageNo = memoryManager->AllocPage();
+        }
+        else
+        {
+            // will force to free a page
+            // printf("\n Need to force to free a page \n");
+            // will do this later
+        }
+
+
+        
+
+
+        // Nafee : We will not exit process anymore 
+        //sysExitHandler(-1);
     }
     else if(which == ReadOnlyException){
         printf("ReadOnlyException\n");

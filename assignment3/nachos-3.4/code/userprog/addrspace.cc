@@ -19,7 +19,7 @@
 #include "copyright.h"
 #include "system.h"
 #include "addrspace.h"
-#include "noff.h"
+// #include "noff.h"   // included noff.h inside addrspace.h
 #ifdef HOST_SPARC
 #include <strings.h>
 #endif
@@ -85,7 +85,12 @@ stack segment. stack size is predefined in "UserStackSize" variable. the others'
 */
 AddrSpace::AddrSpace(OpenFile *executable)
 {
-    NoffHeader noffH;
+    this->executable = executable;
+
+    // printf("\n Now AddrSpace has public field executable \n");
+
+    // printf("\n Now noffH is a member variable to AddrSpace class \n");
+    
     unsigned int i, size;
     success = true;
 
@@ -211,7 +216,7 @@ AddrSpace::AddrSpace(OpenFile *executable)
 
 
     // Nafee : Sid sir said us to comment loading code segment, data segment
-    
+
     //printf("before allocating code seg\n");
     // then, copy in the code and data segments into memory
     // if (noffH.code.size > 0) {
@@ -250,7 +255,7 @@ AddrSpace::AddrSpace(OpenFile *executable)
 AddrSpace::~AddrSpace()
 {
     
-
+    delete executable;
    delete pageTable;
 }
 
@@ -374,6 +379,14 @@ void AddrSpace::loadIntoMemory(char* buff, int size, int startVirAddr){
         }
     }
 
+}
+
+
+
+// Nafee : this function is instructed by Sid sir
+int AddrSpace::loadIntoFreePage(int virtualAddr, int physicalPageNo)
+{
+    return 0;
 }
 
 

@@ -42,7 +42,11 @@ StartProcess(char *filename)
     currentThread->space = space;
     currentThread->processId = processManager->Alloc((void*)currentThread); ///me: todo: assign this process a process id
 
-    delete executable;			// close file
+
+    // Nafee : Sid sir instructed us not to delete executable
+    //delete executable;			// close file
+
+
 
     space->InitRegisters();		// set the initial register values
     space->RestoreState();		// load page table register
