@@ -19,7 +19,7 @@ MemoryManager::~MemoryManager(){
 ///allocates a page
 int MemoryManager::AllocPage(){
     lock->Acquire();
-printf("memMana: allocating. #free: %d\n", numFreePages);
+    printf("\nMemoryManager::AllocPage(). numFreePages = %d\n", numFreePages);
     if(numFreePages == 0){ //no free page available.
         lock->Release();
         return -1;
@@ -29,7 +29,7 @@ printf("memMana: allocating. #free: %d\n", numFreePages);
     for (i = 0; (i < numPages) && (pageStatus->Test(i)); ++i);
 
     numFreePages--;
-printf("marking: %d\n",i );
+    printf("\nmarking: %d\n",i );
     pageStatus->Mark(i);
 
     lock->Release();
@@ -38,7 +38,10 @@ printf("marking: %d\n",i );
 
 void MemoryManager::FreePage(int physPageNum){
     lock->Acquire();
-    printf("memMana: fee. #free: %d\n", numFreePages);
+    printf("\nMemoryManager::FreePage\n");
+    printf("\nphysPageNum = %d\n", physPageNum);
+    printf("\nnumFreePages = %d\n", numFreePages);
+    // printf("memMana: fee. #free: %d\n", numFreePages);
 
     pageStatus->Clear(physPageNum);
     numFreePages++;

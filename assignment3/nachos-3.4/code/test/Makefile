@@ -35,7 +35,7 @@ CPP = gcc -E
 INCDIR =-I../userprog -I../threads
 CFLAGS = -G 0 -c $(INCDIR)
 
-all: array exectest exittest  halt shell matmult sort
+all: array exectest exittest  halt shell matmult sort exectest2
 
 
 
@@ -97,3 +97,13 @@ matmult.o: matmult.c
 matmult: matmult.o start.o
 	$(LD) $(LDFLAGS) start.o matmult.o -o matmult.coff
 	../bin/coff2noff matmult.coff matmult
+
+
+
+###########   Nafee : Added for initial checking
+exectest2.o: exectest2.c
+	$(CC) $(CFLAGS) -c exectest2.c
+exectest2: exectest2.o  start.o
+	$(LD) $(LDFLAGS) start.o exectest2.o -o exectest2.coff
+	../bin/coff2noff exectest2.coff exectest2
+

@@ -17,7 +17,7 @@ char str[4];
 	str[0] = 'a';
 	str[1] = 'b';
 	str[2] = 'c';
-	// Write("in3\n", 4, ConsoleOutput);
+	Write("in3\n", 4, ConsoleOutput);
 	Read(str, 3, ConsoleInput);
 	Write(str, 3, ConsoleOutput);
 
