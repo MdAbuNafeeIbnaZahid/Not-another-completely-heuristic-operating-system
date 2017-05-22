@@ -142,13 +142,18 @@ AddrSpace::AddrSpace(OpenFile *executable)
 
     ///Me: Todo: checks whether the required number of pages are free
     int freePages = memoryManager->getNumFreePages();
-    if(freePages < numPages){ //physical memory does not have enough space for the process
-        printf("Error:AddrSpace:: not enougth memory for the process\n");
-        ///Me: Todo: probably I have to raise exception to terminate the process.
-        success =  false;
-        return ;
-    }
+
+
+    // Nafee : Commenting out this if block as instructed by Sid sir 
+    // if(freePages < numPages){ //physical memory does not have enough space for the process
+    //     printf("Error:AddrSpace:: not enougth memory for the process\n");
+    //     ///Me: Todo: probably I have to raise exception to terminate the process.
+    //     success =  false;
+    //     return ;
+    // }
     ///Me: is it possible to
+
+
 
     // first, set up the translation
     pageTable = new TranslationEntry[numPages]; //Me: Creates page table. Pagetable resides in host's machine!!!
@@ -156,14 +161,29 @@ AddrSpace::AddrSpace(OpenFile *executable)
     for (i = 0; i < numPages; i++) {
 
         pageTable[i].virtualPage = i;   // for now, virtual page # = phys page #
-        pageTable[i].physicalPage = memoryManager->AllocPage(); //Me:Todo: allocate a page using memory manager
+        
+
+        // pageTable[i].physicalPage = memoryManager->AllocPage(); //Me:Todo: allocate a page using memory manager
+        // Nafee : as instructed by Sid sir
+        pageTable[i].physicalPage = -1;
+        
+
         ///Me: I am full confident that the allocation will be successful. Because I have checked
         ///whether I have enough free pages above. And no context switch will occur, as interrupt disabled
         ///
         ///Default code pageTable[i].physicalPage = i;. Why have we changed it?
         ///because i-th physical page may not be available. Which page available?
         ///We need to consult memoryManager.
-        pageTable[i].valid = TRUE; ///Me: will be FALSE if memory allocation fails.
+
+
+
+        
+        // pageTable[i].valid = TRUE; ///Me: will be FALSE if memory allocation fails.
+        // Nafee : As instructed by Sid sir
+        pageTable[i].valid = FALSE;
+
+
+
         pageTable[i].use = FALSE;
         pageTable[i].dirty = FALSE;
         pageTable[i].readOnly = FALSE;  // if the code segment was entirely on
@@ -175,40 +195,49 @@ AddrSpace::AddrSpace(OpenFile *executable)
     (void) interrupt->SetLevel(oldLevel);   // re-enable interrupts
 /*******************************************************************/
 /********************Me:loads code & data segment***************************/
+    
+    // Nafee : Sid sir said us to comment zeroing entire machine->mainMemory
+    // Nafee : So I am commenting out this for loop block
     ///Me: Todo: zero out only the allocated pages, to zero out the uninitialized data segment.
-    for (int i = 0; i < numPages; ++i){
-        char* locationToClean = &machine->mainMemory[ PageSize * pageTable[i].physicalPage ];
-        int numBytesToClean = PageSize;
+    // for (int i = 0; i < numPages; ++i){
+    //     char* locationToClean = &machine->mainMemory[ PageSize * pageTable[i].physicalPage ];
+    //     int numBytesToClean = PageSize;
 
-        bzero(locationToClean, numBytesToClean);
-    }
+    //     bzero(locationToClean, numBytesToClean);
+    // }
 
+
+
+
+
+    // Nafee : Sid sir said us to comment loading code segment, data segment
+    
     //printf("before allocating code seg\n");
     // then, copy in the code and data segments into memory
-    if (noffH.code.size > 0) {
-        DEBUG('a', "Initializing code segment, at 0x%x, size %d\n",
-              noffH.code.virtualAddr, noffH.code.size);
+    // if (noffH.code.size > 0) {
+    //     DEBUG('a', "Initializing code segment, at 0x%x, size %d\n",
+    //           noffH.code.virtualAddr, noffH.code.size);
 
-        ///Me: Todo: copy the code segment into mips's memory
-        char* buff = new char[noffH.code.size  + 10];
-        executable->ReadAt(buff, noffH.code.size, noffH.code.inFileAddr);
-        loadIntoMemory(buff, noffH.code.size, noffH.code.virtualAddr );
-        delete buff;
+    //     ///Me: Todo: copy the code segment into mips's memory
+    //     char* buff = new char[noffH.code.size  + 10];
+    //     executable->ReadAt(buff, noffH.code.size, noffH.code.inFileAddr);
+    //     loadIntoMemory(buff, noffH.code.size, noffH.code.virtualAddr );
+    //     delete buff;
 
-        //executable->ReadAt(&(machine->mainMemory[noffH.code.virtualAddr]),    noffH.code.size, noffH.code.inFileAddr);
-    }
-    if (noffH.initData.size > 0) {
-        DEBUG('a', "Initializing data segment, at 0x%x, size %d\n",
-              noffH.initData.virtualAddr, noffH.initData.size);
+    //     //executable->ReadAt(&(machine->mainMemory[noffH.code.virtualAddr]),    noffH.code.size, noffH.code.inFileAddr);
+    // }
+    // if (noffH.initData.size > 0) {
+    //     DEBUG('a', "Initializing data segment, at 0x%x, size %d\n",
+    //           noffH.initData.virtualAddr, noffH.initData.size);
 
-        ///Me: Todo: copy the data segment into mips's memory
-        char* buff = new char[noffH.initData.size  + 10];
-        executable->ReadAt(buff, noffH.initData.size, noffH.initData.inFileAddr);
-        loadIntoMemory(buff, noffH.initData.size, noffH.initData.virtualAddr );
-        delete buff;
+    //     ///Me: Todo: copy the data segment into mips's memory
+    //     char* buff = new char[noffH.initData.size  + 10];
+    //     executable->ReadAt(buff, noffH.initData.size, noffH.initData.inFileAddr);
+    //     loadIntoMemory(buff, noffH.initData.size, noffH.initData.virtualAddr );
+    //     delete buff;
 
-        //executable->ReadAt(&(machine->mainMemory[noffH.initData.virtualAddr]), noffH.initData.size, noffH.initData.inFileAddr);
-    }
+    //     //executable->ReadAt(&(machine->mainMemory[noffH.initData.virtualAddr]), noffH.initData.size, noffH.initData.inFileAddr);
+    // }
     /*******************************************************************/
 
 }

@@ -126,7 +126,7 @@ ExceptionHandler(ExceptionType which)
 
     }
     else if(which == PageFaultException){
-        printf("Page Fault...\n");
+        printf("\nPage Fault...\n");
         sysExitHandler(-1);
     }
     else if(which == ReadOnlyException){
