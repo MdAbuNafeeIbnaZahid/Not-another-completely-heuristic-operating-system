@@ -458,7 +458,8 @@ addrspace.o: ../userprog/addrspace.cc /usr/include/stdc-predef.h \
  ../machine/interrupt.h ../threads/list.h ../machine/stats.h \
  ../machine/timer.h ../userprog/MemoryManager.h ../userprog/bitmap.h \
  ../filesys/openfile.h ../threads/synch.h ../userprog/IDManager.h \
- ../machine/console.h ../threads/synch.h ../userprog/addrspace.h
+ ../machine/console.h ../threads/synch.h ../userprog/addrspace.h \
+ ../userprog/my_utility.h
 bitmap.o: ../userprog/bitmap.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../userprog/bitmap.h ../threads/utility.h \
  ../threads/copyright.h ../threads/bool.h ../machine/sysdep.h \

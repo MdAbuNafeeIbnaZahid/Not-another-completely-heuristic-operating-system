@@ -145,7 +145,8 @@ ExceptionHandler(ExceptionType which)
         }
 
 
-        
+        // printf("\n before calling loadIntoFreePage \n");
+        currentThread->space->loadIntoFreePage( faultingAddress, physicalPageNo );
 
 
         // Nafee : We will not exit process anymore 

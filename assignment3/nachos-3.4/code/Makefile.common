@@ -83,7 +83,8 @@ USERPROG_H = ../userprog/addrspace.h\
 	../machine/mipssim.h\
 	../machine/translate.h\
 	../userprog/MemoryManager.h\
-	../userprog/IDManager.h
+	../userprog/IDManager.h\
+	../userprog/my_utility.h
 
 USERPROG_C = ../userprog/addrspace.cc\
 	../userprog/bitmap.cc\

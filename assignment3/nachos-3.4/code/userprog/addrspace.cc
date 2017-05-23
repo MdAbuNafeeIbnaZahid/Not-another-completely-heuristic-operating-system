@@ -20,6 +20,9 @@
 #include "system.h"
 #include "addrspace.h"
 // #include "noff.h"   // included noff.h inside addrspace.h
+
+#include "my_utility.h" // some utility functions written by me
+
 #ifdef HOST_SPARC
 #include <strings.h>
 #endif
@@ -386,8 +389,79 @@ void AddrSpace::loadIntoMemory(char* buff, int size, int startVirAddr){
 // Nafee : this function is instructed by Sid sir
 int AddrSpace::loadIntoFreePage(int virtualAddr, int physicalPageNo)
 {
-    return 0;
+    int vpn = virtualAddr / PageSize;
+    pageTable[vpn].physicalPage = physicalPageNo;
+    pageTable[vpn].valid = TRUE;
+
+    
+
+    if ( (virtualAddr >= noffH.code.virtualAddr) && 
+        (virtualAddr <= noffH.code.virtualAddr + noffH.code.size) )
+    {
+        // printf("\n Faulted address in code segment \n");
+        int codeoffset = (virtualAddr-noffH.code.virtualAddr)/PageSize;
+
+        // int codeSize = myMin()
+    }
+    else if ( (virtualAddr >= noffH.initData.virtualAddr) &&
+    (virtualAddr <= noffH.initData.virtualAddr + noffH.initData.size) )
+    {
+        // printf("\n Faulted address in initData segment \n");
+    }
+    else 
+    {
+        // printf("\n Faulted address in uninitData segment \n");
+    }
 }
+
+
+
+
+// Nafee : Sid sir said us to comment zeroing entire machine->mainMemory
+    // Nafee : So I am commenting out this for loop block
+    ///Me: Todo: zero out only the allocated pages, to zero out the uninitialized data segment.
+    // for (int i = 0; i < numPages; ++i){
+    //     char* locationToClean = &machine->mainMemory[ PageSize * pageTable[i].physicalPage ];
+    //     int numBytesToClean = PageSize;
+
+    //     bzero(locationToClean, numBytesToClean);
+    // }
+
+
+
+
+
+    // Nafee : Sid sir said us to comment loading code segment, data segment
+
+    //printf("before allocating code seg\n");
+    // then, copy in the code and data segments into memory
+    // if (noffH.code.size > 0) {
+    //     DEBUG('a', "Initializing code segment, at 0x%x, size %d\n",
+    //           noffH.code.virtualAddr, noffH.code.size);
+
+    //     ///Me: Todo: copy the code segment into mips's memory
+    //     char* buff = new char[noffH.code.size  + 10];
+    //     executable->ReadAt(buff, noffH.code.size, noffH.code.inFileAddr);
+    //     loadIntoMemory(buff, noffH.code.size, noffH.code.virtualAddr );
+    //     delete buff;
+
+    //     //executable->ReadAt(&(machine->mainMemory[noffH.code.virtualAddr]),    noffH.code.size, noffH.code.inFileAddr);
+    // }
+    // if (noffH.initData.size > 0) {
+    //     DEBUG('a', "Initializing data segment, at 0x%x, size %d\n",
+    //           noffH.initData.virtualAddr, noffH.initData.size);
+
+    //     ///Me: Todo: copy the data segment into mips's memory
+    //     char* buff = new char[noffH.initData.size  + 10];
+    //     executable->ReadAt(buff, noffH.initData.size, noffH.initData.inFileAddr);
+    //     loadIntoMemory(buff, noffH.initData.size, noffH.initData.virtualAddr );
+    //     delete buff;
+
+    //     //executable->ReadAt(&(machine->mainMemory[noffH.initData.virtualAddr]), noffH.initData.size, noffH.initData.inFileAddr);
+    // }
+    /*******************************************************************/
+
+
 
 
 ///may contain buss. not tested
