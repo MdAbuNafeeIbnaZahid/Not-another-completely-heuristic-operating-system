@@ -389,6 +389,8 @@ void AddrSpace::loadIntoMemory(char* buff, int size, int startVirAddr){
 // Nafee : this function is instructed by Sid sir
 int AddrSpace::loadIntoFreePage(int virtualAddr, int physicalPageNo)
 {
+    // Nafee : In my implementation this function will  load the whole page containing the 
+    // Nafee : virtual address to the physicalPage
     int vpn = virtualAddr / PageSize;
     pageTable[vpn].physicalPage = physicalPageNo;
     pageTable[vpn].valid = TRUE;
@@ -399,28 +401,46 @@ int AddrSpace::loadIntoFreePage(int virtualAddr, int physicalPageNo)
     int virtualAddrEnd = vpn * PageSize + PageSize -1;
 
 
+    int distFromBase = 0;
     int i;
     for (i = virtualAddrStart; i <= virtualAddrEnd; i++)
     {
+        int physicalAddress = physicalPageNo * PageSize + virtualAddr % PageSize;
         if ( (i >= noffH.code.virtualAddr) && (i < noffH.code.virtualAddr + noffH.code.size) )
         {
-
+            distFromBase = i - noffH.code.virtualAddr;
+            char* buff = new char[ 10];
+            executable->ReadAt(buff, 1, noffH.code.inFileAddr + distFromBase);
+            loadIntoMemory(buff, 1, noffH.code.virtualAddr + distFromBase );
+            delete buff;
         }
         else if ( (i >= noffH.initData.virtualAddr) && (i < noffH.initData.virtualAddr + noffH.initData.size) )
         {
-
+            distFromBase = i - noffH.initData.virtualAddr;
+            char* buff = new char[ 10];
+            executable->ReadAt(buff, 1, noffH.initData.inFileAddr + distFromBase);
+            loadIntoMemory(buff, 1, noffH.initData.virtualAddr + distFromBase );
+            delete buff;
         }
         else if ( (i >= noffH.uninitData.virtualAddr) && (i < noffH.uninitData.virtualAddr + noffH.uninitData.size) )
         {
+            // Nafee : I am zeroing out the main memory as Sid sir instructed
+            char* locationToClean = &machine->mainMemory[ physicalAddress ];
+            int numBytesToClean = 1;
 
+            bzero(locationToClean, numBytesToClean);
         }
         else
         {
+            // Nafee : I am zeroing out the main memory as Sid sir instructed
+            char* locationToClean = &machine->mainMemory[ physicalAddress ];
+            int numBytesToClean = 1;
 
+            bzero(locationToClean, numBytesToClean);
         }
     }
 
-    // printf("\n working of page loading in my way \n");
+    
 
 
 
