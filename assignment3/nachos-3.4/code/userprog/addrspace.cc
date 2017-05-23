@@ -393,25 +393,71 @@ int AddrSpace::loadIntoFreePage(int virtualAddr, int physicalPageNo)
     pageTable[vpn].physicalPage = physicalPageNo;
     pageTable[vpn].valid = TRUE;
 
-    
+    int byteLoaded = 0;
 
-    if ( (virtualAddr >= noffH.code.virtualAddr) && 
-        (virtualAddr <= noffH.code.virtualAddr + noffH.code.size) )
-    {
-        // printf("\n Faulted address in code segment \n");
-        int codeoffset = (virtualAddr-noffH.code.virtualAddr)/PageSize;
+    int virtualAddrStart = vpn * PageSize;
+    int virtualAddrEnd = vpn * PageSize + PageSize -1;
 
-        // int codeSize = myMin()
-    }
-    else if ( (virtualAddr >= noffH.initData.virtualAddr) &&
-    (virtualAddr <= noffH.initData.virtualAddr + noffH.initData.size) )
+
+    int i;
+    for (i = virtualAddrStart; i <= virtualAddrEnd; i++)
     {
-        // printf("\n Faulted address in initData segment \n");
+        if ( (i >= noffH.code.virtualAddr) && (i < noffH.code.virtualAddr + noffH.code.size) )
+        {
+
+        }
+        else if ( (i >= noffH.initData.virtualAddr) && (i < noffH.initData.virtualAddr + noffH.initData.size) )
+        {
+
+        }
+        else if ( (i >= noffH.uninitData.virtualAddr) && (i < noffH.uninitData.virtualAddr + noffH.uninitData.size) )
+        {
+
+        }
+        else
+        {
+
+        }
     }
-    else 
-    {
-        // printf("\n Faulted address in uninitData segment \n");
-    }
+
+    // printf("\n working of page loading in my way \n");
+
+
+
+    // I am not doing it in sir's way
+    // if ( (virtualAddr >= noffH.code.virtualAddr) && 
+    //     (virtualAddr < noffH.code.virtualAddr + noffH.code.size) )
+    // {
+    //     // printf("\n Faulted address in code segment \n");
+    //     int codeoffset = (virtualAddr-noffH.code.virtualAddr)/PageSize;
+
+
+    //     // Nafee : Sir sir gave this equation for codeSize 
+    //     // Nafee : I am very much skeptical about it
+    //     // Nafee : I have tested with sir's equation of codeSize. sometimes it gives 0 as
+    //     // codeSize. It's weird
+    //     // int codeSize = myMin(noffH.code.virtualAddr + noffH.code.size - 
+    //     //     codeoffset * PageSize, PageSize);
+
+
+
+    //     // Writing my own equation of codeSize 
+    //     int codeSize = myMin( noffH.code.virtualAddr + noffH.code.size - vpn * PageSize,
+    //     PageSize );
+
+
+    //     printf("\n codeSize = %d \n", codeSize);
+
+    // }
+    // else if ( (virtualAddr >= noffH.initData.virtualAddr) &&
+    // (virtualAddr <= noffH.initData.virtualAddr + noffH.initData.size) )
+    // {
+    //     // printf("\n Faulted address in initData segment \n");
+    // }
+    // else 
+    // {
+    //     // printf("\n Faulted address in uninitData segment \n");
+    // }
 }
 
 
