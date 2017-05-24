@@ -320,7 +320,12 @@ int sysExitHandler(int returnValue){
 
     ///Me: todo: free the allocated page frames
     for (int i = 0; i < machine->pageTableSize; ++i) {
-        memoryManager->FreePage(machine->pageTable[i].physicalPage);
+        if ( machine->pageTable[i].valid ) // Nafee : only freeing the valid pages as 
+            // sid sir instructed
+        {
+            // printf("\n Got a valid page \n");
+            memoryManager->FreePage(machine->pageTable[i].physicalPage);
+        }
     }
     myDebug('e',"total processes: %d\n", processManager->currentItems());
 
