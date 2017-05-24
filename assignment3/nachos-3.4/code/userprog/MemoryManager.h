@@ -45,6 +45,10 @@ public:
     int Alloc(int processNo, TranslationEntry *entry);
 
     int AllocByForce();
+
+    int GetProcessIdFromPhysPageNum(int physPageNum);
+
+    TranslationEntry *GetTranslationEntryFromPhysPageNum(int physPageNum);
 };
 
 

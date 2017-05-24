@@ -11,6 +11,12 @@ MemoryManager::MemoryManager(int numPages){
     lock = new Lock("ofk");
     processMap = new int[numPages];
     entries = new TranslationEntry*[numPages];
+    int i;
+    for ( i = 0; i < numPages; i++)
+    {
+        processMap[i] = -1;
+        entries[i] = NULL;
+    }
 }
 
 MemoryManager::~MemoryManager(){
@@ -72,6 +78,9 @@ void MemoryManager::FreePage(int physPageNum){
 
     pageStatus->Clear(physPageNum);
     numFreePages++;
+
+
+
     lock->Release();
 }
 
@@ -82,4 +91,14 @@ bool MemoryManager::PageIsAllocated(int physPageNum){
 int MemoryManager::AllocByForce()
 {
     return 0;
+}
+
+int MemoryManager::GetProcessIdFromPhysPageNum(int physPageNum)
+{
+    return processMap[physPageNum];
+}
+
+TranslationEntry* MemoryManager::GetTranslationEntryFromPhysPageNum(int physPageNum)
+{
+    return entries[physPageNum];
 }

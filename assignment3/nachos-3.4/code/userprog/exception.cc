@@ -147,7 +147,10 @@ ExceptionHandler(ExceptionType which)
             printf("\n forcing a page out \n");
             physicalPageNo = memoryManager->AllocByForce();
 
-            // do swapfile case later
+            
+
+            // handle swap file cases here
+
         }
 
         printf("\n faultingAddress = %d \n", faultingAddress);
