@@ -174,6 +174,7 @@ AddrSpace::AddrSpace(OpenFile *executable)
         // pageTable[i].physicalPage = memoryManager->AllocPage(); //Me:Todo: allocate a page using memory manager
         // Nafee : as instructed by Sid sir
         pageTable[i].physicalPage = -1;
+        pageTable[i].swapPage = -1;
         
 
         ///Me: I am full confident that the allocation will be successful. Because I have checked
@@ -189,6 +190,7 @@ AddrSpace::AddrSpace(OpenFile *executable)
         // pageTable[i].valid = TRUE; ///Me: will be FALSE if memory allocation fails.
         // Nafee : As instructed by Sid sir
         pageTable[i].valid = FALSE;
+        pageTable[i].isEverUsed = FALSE;
 
 
 
@@ -394,6 +396,7 @@ int AddrSpace::loadIntoFreePage(int virtualAddr, int physicalPageNo)
     int vpn = virtualAddr / PageSize;
     pageTable[vpn].physicalPage = physicalPageNo;
     pageTable[vpn].valid = TRUE;
+    pageTable[vpn].isEverUsed = TRUE;
 
     int byteLoaded = 0;
 
@@ -575,3 +578,44 @@ int copyFromVirMem(int virAddr, int size, char* buff){ //much like loadIntoMemor
 }
 
 
+
+
+int AddrSpace::saveIntoSwapSpace(int vpn)
+{
+    if ( pageTable[vpn].swapPage == -1 )
+    {
+        pageTable[vpn].swapPage = swapMemoryManager->AllocPage();
+    }
+    
+    int swapAddrStart = pageTable[vpn].swapPage * PageSize;
+    int physicalAddrStart = pageTable[vpn].physicalPage * PageSize;
+    int i;
+    for (i = 0; i < PageSize; i++)
+    {
+        swapMemory[swapAddrStart+i] = machine->mainMemory[physicalAddrStart+i];
+    }
+    return pageTable[vpn].swapPage;
+}
+
+
+
+int AddrSpace::loadFromSwapSpace(int vpn)
+{
+    if ( pageTable[vpn].swapPage == -1 )
+    {
+        return -1;
+    }
+    int swapAddrStart = pageTable[vpn].swapPage * PageSize;
+    int physicalAddrStart = pageTable[vpn].physicalPage * PageSize;
+    int i;
+    for (i = 0; i < PageSize; i++)
+    {
+        machine->mainMemory[physicalAddrStart+i] = swapMemory[swapAddrStart+i] ;
+    }
+    return pageTable[vpn].swapPage;
+}
+
+bool AddrSpace::isSwapPageExists(int vpn)
+{
+    return pageTable[vpn].swapPage != -1;
+}

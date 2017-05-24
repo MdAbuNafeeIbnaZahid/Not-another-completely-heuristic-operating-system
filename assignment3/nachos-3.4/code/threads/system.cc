@@ -8,6 +8,9 @@
 #include "copyright.h"
 #include "system.h"
 
+// Nafee 
+#define NUM_SWAP_PAGE 9999
+
 // This defines *all* of the global data structures used by Nachos.
 // These are all initialized and de-allocated by this file.
 
@@ -33,6 +36,10 @@ SynchDisk   *synchDisk;
     ///Me:
     MemoryManager * memoryManager;
     IDManager* processManager;
+
+    // Nafee :
+    char *swapMemory;
+    MemoryManager *swapMemoryManager;
 
     ///me: for console
     ConsoleData myConsole;
@@ -168,6 +175,11 @@ Initialize(int argc, char **argv)
     ///me:
     memoryManager = new MemoryManager(NumPhysPages);
     processManager = new IDManager(10);
+
+
+    //Nafee :
+    swapMemory = new char[NUM_SWAP_PAGE * PageSize];
+    swapMemoryManager = new MemoryManager(NUM_SWAP_PAGE);
     
     myConsole.device = new Console(NULL, NULL, consoleReadAvailable, consoleWriteDone, 1);
     myConsole.lock = new Lock("Console lock");

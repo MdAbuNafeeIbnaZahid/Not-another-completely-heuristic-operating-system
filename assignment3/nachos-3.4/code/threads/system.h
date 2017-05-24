@@ -40,6 +40,14 @@ extern Timer *timer;				// the hardware alarm clock
 	extern MemoryManager * memoryManager; //Me: memory manager
 	extern IDManager* processManager;
 
+
+	// Nafee :
+	extern char *swapMemory;
+	extern MemoryManager *swapMemoryManager;
+
+
+
+
 	////////for console purpose
 	#include "console.h"
 	#include "synch.h"

@@ -38,8 +38,15 @@ class AddrSpace {
 
 
 
-    // Nafee : This function is instructed by Sid sir
+    // Nafee : These functions are instructed by Sid sir
     int loadIntoFreePage(int virtualAddr, int physicalPageNo);
+    int saveIntoSwapSpace(int vpn);
+    int loadFromSwapSpace(int vpn);
+    bool isSwapPageExists(int vpn); // Nafee : sir said us to implement it, but I think I don't need it
+    
+
+
+
   private:
 
     TranslationEntry *pageTable;	// Assume linear page table translation

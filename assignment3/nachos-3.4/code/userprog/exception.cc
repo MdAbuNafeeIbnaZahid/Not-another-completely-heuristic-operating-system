@@ -127,8 +127,7 @@ ExceptionHandler(ExceptionType which)
     }
     else if(which == PageFaultException){
 
-
-
+        
 
         // printf("\nPage Fault...\n");
         int faultingAddress = machine->ReadRegister(39);
