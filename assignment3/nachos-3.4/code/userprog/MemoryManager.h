@@ -6,6 +6,9 @@
 #define CODE_LEARNING_MEMORYMANAGER_H
 #include "bitmap.h"
 #include "synch.h"
+#include "translate.h"
+
+
 
 class MemoryManager {
     int numPages;
@@ -15,6 +18,10 @@ class MemoryManager {
     //// (pageStatus[i] = 1) => i-th page frame is alocated.
 
     Lock* lock;//for thread safety
+
+    int *processMap;
+
+    TranslationEntry **entries; 
 public:
     /* Create a manager to track the allocation of numPages of physical memory.
     You will create one by calling the constructor with NumPhysPages as
@@ -35,6 +42,9 @@ public:
     /* True if the physical page is allocated, false otherwise. */
     bool PageIsAllocated(int physPageNum); ///haven't implemented this.
 
+    int Alloc(int processNo, TranslationEntry *entry);
+
+    int AllocByForce();
 };
 
 

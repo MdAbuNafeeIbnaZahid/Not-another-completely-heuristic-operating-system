@@ -9,6 +9,8 @@ MemoryManager::MemoryManager(int numPages){
     this->numFreePages = numPages;
     pageStatus = new BitMap(this->numPages);
     lock = new Lock("ofk");
+    processMap = new int[numPages];
+    entries = new TranslationEntry*[numPages];
 }
 
 MemoryManager::~MemoryManager(){
@@ -36,6 +38,31 @@ int MemoryManager::AllocPage(){
     return i;
 }
 
+///allocates a page
+int MemoryManager::Alloc(int processNo, TranslationEntry *entry){
+    lock->Acquire();
+    printf("\nMemoryManager::AllocPage(). numFreePages = %d\n", numFreePages);
+    if(numFreePages == 0){ //no free page available.
+        lock->Release();
+        return -1;
+    }
+
+    int i;
+    for (i = 0; (i < numPages) && (pageStatus->Test(i)); ++i);
+
+    numFreePages--;
+    printf("\nmarking: %d\n",i );
+    pageStatus->Mark(i);
+
+    processMap[i] = processNo;
+    entries[i] = entry;
+
+    lock->Release();
+    return i;
+}
+
+
+
 void MemoryManager::FreePage(int physPageNum){
     lock->Acquire();
     printf("\nMemoryManager::FreePage\n");
@@ -50,4 +77,9 @@ void MemoryManager::FreePage(int physPageNum){
 
 bool MemoryManager::PageIsAllocated(int physPageNum){
     ///I think I don't need this.
+}
+
+int MemoryManager::AllocByForce()
+{
+    return 0;
 }

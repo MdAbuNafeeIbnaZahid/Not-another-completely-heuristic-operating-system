@@ -126,6 +126,10 @@ ExceptionHandler(ExceptionType which)
 
     }
     else if(which == PageFaultException){
+
+
+
+
         // printf("\nPage Fault...\n");
         int faultingAddress = machine->ReadRegister(39);
         // printf("\nfaultingAddress = %d\n", faultingAddress);
@@ -134,16 +138,21 @@ ExceptionHandler(ExceptionType which)
         int physicalPageNo = -1;
         if ( memoryManager->getNumFreePages() > 0 )
         {
-            // printf("\n Free page is available \n");
-            physicalPageNo = memoryManager->AllocPage();
+            printf("\n Free page is available \n");
+            //physicalPageNo = memoryManager->AllocPage();
+            physicalPageNo = memoryManager->Alloc((int)currentThread->processId, &machine->pageTable[vpn]);
         }
         else
         {
             // will force to free a page
-            // printf("\n Need to force to free a page \n");
-            // will do this later
+            printf("\n forcing a page out \n");
+            physicalPageNo = memoryManager->AllocByForce();
+
+            // do swapfile case later
         }
 
+        printf("\n faultingAddress = %d \n", faultingAddress);
+        printf("\n physicalPageNo = %d \n", physicalPageNo);
 
         // printf("\n before calling loadIntoFreePage \n");
         currentThread->space->loadIntoFreePage( faultingAddress, physicalPageNo );
