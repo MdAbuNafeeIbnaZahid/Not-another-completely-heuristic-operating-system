@@ -1,0 +1,88 @@
+cd threads; gmake depend
+gmake[1]: Entering directory `/home/tareq/Sandbox/nachos-assignment-32bit/assignment3/nachos-3.4/code/threads'
+g++ -I../threads -I../machine -DTHREADS -DHOST_i386 -DCHANGED -M ../threads/main.cc ../threads/list.cc ../threads/scheduler.cc ../threads/synch.cc ../threads/synchlist.cc ../threads/system.cc ../threads/thread.cc ../threads/utility.cc ../threads/threadtest.cc ../machine/interrupt.cc ../machine/sysdep.cc ../machine/stats.cc ../machine/timer.cc ../threads/PC_Problem/Producer.cc ../threads/PC_Problem/Consumer.cc > makedep
+echo '/^# DO NOT DELETE THIS LINE/+2,$d' >eddep
+echo '$r makedep' >>eddep
+echo 'w' >>eddep
+ed - Makefile < eddep
+rm eddep makedep 
+echo '# DEPENDENCIES MUST END AT END OF FILE' >> Makefile
+echo '# IF YOU PUT STUFF HERE IT WILL GO AWAY' >> Makefile
+echo '# see make depend above' >> Makefile
+gmake[1]: Leaving directory `/home/tareq/Sandbox/nachos-assignment-32bit/assignment3/nachos-3.4/code/threads'
+cd threads; gmake nachos
+gmake[1]: Entering directory `/home/tareq/Sandbox/nachos-assignment-32bit/assignment3/nachos-3.4/code/threads'
+gmake[1]: `nachos' is up to date.
+gmake[1]: Leaving directory `/home/tareq/Sandbox/nachos-assignment-32bit/assignment3/nachos-3.4/code/threads'
+cd userprog; gmake depend 
+gmake[1]: Entering directory `/home/tareq/Sandbox/nachos-assignment-32bit/assignment3/nachos-3.4/code/userprog'
+g++ -I../bin -I../filesys -I../userprog -I../threads -I../machine -DUSER_PROGRAM -DFILESYS_NEEDED -DFILESYS_STUB -DHOST_i386 -DCHANGED -M ../threads/main.cc ../threads/list.cc ../threads/scheduler.cc ../threads/synch.cc ../threads/synchlist.cc ../threads/system.cc ../threads/thread.cc ../threads/utility.cc ../threads/threadtest.cc ../machine/interrupt.cc ../machine/sysdep.cc ../machine/stats.cc ../machine/timer.cc ../threads/PC_Problem/Producer.cc ../threads/PC_Problem/Consumer.cc ../userprog/addrspace.cc ../userprog/bitmap.cc ../userprog/exception.cc ../userprog/progtest.cc ../machine/console.cc ../machine/machine.cc ../machine/mipssim.cc ../machine/translate.cc ../userprog/MemoryManager.cc ../userprog/IDManager.cc > makedep
+echo '/^# DO NOT DELETE THIS LINE/+2,$d' >eddep
+echo '$r makedep' >>eddep
+echo 'w' >>eddep
+ed - Makefile < eddep
+rm eddep makedep 
+echo '# DEPENDENCIES MUST END AT END OF FILE' >> Makefile
+echo '# IF YOU PUT STUFF HERE IT WILL GO AWAY' >> Makefile
+echo '# see make depend above' >> Makefile
+gmake[1]: Leaving directory `/home/tareq/Sandbox/nachos-assignment-32bit/assignment3/nachos-3.4/code/userprog'
+cd userprog; gmake nachos 
+gmake[1]: Entering directory `/home/tareq/Sandbox/nachos-assignment-32bit/assignment3/nachos-3.4/code/userprog'
+gmake[1]: `nachos' is up to date.
+gmake[1]: Leaving directory `/home/tareq/Sandbox/nachos-assignment-32bit/assignment3/nachos-3.4/code/userprog'
+cd vm; gmake depend
+gmake[1]: Entering directory `/home/tareq/Sandbox/nachos-assignment-32bit/assignment3/nachos-3.4/code/vm'
+g++ -I../filesys -I../bin -I../vm -I../userprog -I../threads -I../machine -DUSER_PROGRAM  -DFILESYS_NEEDED -DFILESYS_STUB -DVM -DUSE_TLB -DHOST_i386 -DCHANGED -M ../threads/main.cc ../threads/list.cc ../threads/scheduler.cc ../threads/synch.cc ../threads/synchlist.cc ../threads/system.cc ../threads/thread.cc ../threads/utility.cc ../threads/threadtest.cc ../machine/interrupt.cc ../machine/sysdep.cc ../machine/stats.cc ../machine/timer.cc ../threads/PC_Problem/Producer.cc ../threads/PC_Problem/Consumer.cc ../userprog/addrspace.cc ../userprog/bitmap.cc ../userprog/exception.cc ../userprog/progtest.cc ../machine/console.cc ../machine/machine.cc ../machine/mipssim.cc ../machine/translate.cc ../userprog/MemoryManager.cc ../userprog/IDManager.cc  > makedep
+echo '/^# DO NOT DELETE THIS LINE/+2,$d' >eddep
+echo '$r makedep' >>eddep
+echo 'w' >>eddep
+ed - Makefile < eddep
+rm eddep makedep 
+echo '# DEPENDENCIES MUST END AT END OF FILE' >> Makefile
+echo '# IF YOU PUT STUFF HERE IT WILL GO AWAY' >> Makefile
+echo '# see make depend above' >> Makefile
+gmake[1]: Leaving directory `/home/tareq/Sandbox/nachos-assignment-32bit/assignment3/nachos-3.4/code/vm'
+cd vm; gmake nachos 
+gmake[1]: Entering directory `/home/tareq/Sandbox/nachos-assignment-32bit/assignment3/nachos-3.4/code/vm'
+gmake[1]: `nachos' is up to date.
+gmake[1]: Leaving directory `/home/tareq/Sandbox/nachos-assignment-32bit/assignment3/nachos-3.4/code/vm'
+cd filesys; gmake depend
+gmake[1]: Entering directory `/home/tareq/Sandbox/nachos-assignment-32bit/assignment3/nachos-3.4/code/filesys'
+g++ -I../filesys -I../bin -I../vm -I../userprog -I../threads -I../machine -DTHREADS -DUSER_PROGRAM -DVM -DFILESYS_NEEDED -DFILESYS -DHOST_i386 -DCHANGED -M ../threads/main.cc ../threads/list.cc ../threads/scheduler.cc ../threads/synch.cc ../threads/synchlist.cc ../threads/system.cc ../threads/thread.cc ../threads/utility.cc ../threads/threadtest.cc ../machine/interrupt.cc ../machine/sysdep.cc ../machine/stats.cc ../machine/timer.cc ../threads/PC_Problem/Producer.cc ../threads/PC_Problem/Consumer.cc ../userprog/addrspace.cc ../userprog/bitmap.cc ../userprog/exception.cc ../userprog/progtest.cc ../machine/console.cc ../machine/machine.cc ../machine/mipssim.cc ../machine/translate.cc ../userprog/MemoryManager.cc ../userprog/IDManager.cc  ../filesys/directory.cc ../filesys/filehdr.cc ../filesys/filesys.cc ../filesys/fstest.cc ../filesys/openfile.cc ../filesys/synchdisk.cc ../machine/disk.cc > makedep
+echo '/^# DO NOT DELETE THIS LINE/+2,$d' >eddep
+echo '$r makedep' >>eddep
+echo 'w' >>eddep
+ed - Makefile < eddep
+rm eddep makedep 
+echo '# DEPENDENCIES MUST END AT END OF FILE' >> Makefile
+echo '# IF YOU PUT STUFF HERE IT WILL GO AWAY' >> Makefile
+echo '# see make depend above' >> Makefile
+gmake[1]: Leaving directory `/home/tareq/Sandbox/nachos-assignment-32bit/assignment3/nachos-3.4/code/filesys'
+cd filesys; gmake nachos 
+gmake[1]: Entering directory `/home/tareq/Sandbox/nachos-assignment-32bit/assignment3/nachos-3.4/code/filesys'
+gmake[1]: `nachos' is up to date.
+gmake[1]: Leaving directory `/home/tareq/Sandbox/nachos-assignment-32bit/assignment3/nachos-3.4/code/filesys'
+cd network; gmake depend
+gmake[1]: Entering directory `/home/tareq/Sandbox/nachos-assignment-32bit/assignment3/nachos-3.4/code/network'
+g++ -I../network -I../bin -I../filesys -I../vm -I../userprog -I../threads -I../machine -DUSER_PROGRAM -DVM -DFILESYS_NEEDED -DFILESYS -DNETWORK -DHOST_i386 -DCHANGED -M ../threads/main.cc ../threads/list.cc ../threads/scheduler.cc ../threads/synch.cc ../threads/synchlist.cc ../threads/system.cc ../threads/thread.cc ../threads/utility.cc ../threads/threadtest.cc ../machine/interrupt.cc ../machine/sysdep.cc ../machine/stats.cc ../machine/timer.cc ../threads/PC_Problem/Producer.cc ../threads/PC_Problem/Consumer.cc ../userprog/addrspace.cc ../userprog/bitmap.cc ../userprog/exception.cc ../userprog/progtest.cc ../machine/console.cc ../machine/machine.cc ../machine/mipssim.cc ../machine/translate.cc ../userprog/MemoryManager.cc ../userprog/IDManager.cc  ../filesys/directory.cc ../filesys/filehdr.cc ../filesys/filesys.cc ../filesys/fstest.cc ../filesys/openfile.cc ../filesys/synchdisk.cc ../machine/disk.cc ../network/nettest.cc ../network/post.cc ../machine/network.cc > makedep
+echo '/^# DO NOT DELETE THIS LINE/+2,$d' >eddep
+echo '$r makedep' >>eddep
+echo 'w' >>eddep
+ed - Makefile < eddep
+rm eddep makedep 
+echo '# DEPENDENCIES MUST END AT END OF FILE' >> Makefile
+echo '# IF YOU PUT STUFF HERE IT WILL GO AWAY' >> Makefile
+echo '# see make depend above' >> Makefile
+gmake[1]: Leaving directory `/home/tareq/Sandbox/nachos-assignment-32bit/assignment3/nachos-3.4/code/network'
+cd network; gmake nachos 
+gmake[1]: Entering directory `/home/tareq/Sandbox/nachos-assignment-32bit/assignment3/nachos-3.4/code/network'
+gmake[1]: `nachos' is up to date.
+gmake[1]: Leaving directory `/home/tareq/Sandbox/nachos-assignment-32bit/assignment3/nachos-3.4/code/network'
+cd bin; make all
+make[1]: Entering directory `/home/tareq/Sandbox/nachos-assignment-32bit/assignment3/nachos-3.4/code/bin'
+make[1]: Nothing to be done for `all'.
+make[1]: Leaving directory `/home/tareq/Sandbox/nachos-assignment-32bit/assignment3/nachos-3.4/code/bin'
+cd test; make all
+make[1]: Entering directory `/home/tareq/Sandbox/nachos-assignment-32bit/assignment3/nachos-3.4/code/test'
+gnu-decstation-ultrix/decstation-ultrix/gcc -Bgnu-decstation-ultrix/ -G 0 -c -I../userprog -I../threads -c exectest.c
+make[1]: Leaving directory `/home/tareq/Sandbox/nachos-assignment-32bit/assignment3/nachos-3.4/code/test'

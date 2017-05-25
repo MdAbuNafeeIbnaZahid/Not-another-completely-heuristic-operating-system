@@ -125,9 +125,17 @@ ExceptionHandler(ExceptionType which)
         
 
     }
-    else if(which == PageFaultException){
-
-        printf("\n PageFaultException occurred \n");
+    else if( (which == PageFaultException)  || (which==AddressErrorException) )
+    {
+        if ( which == PageFaultException )
+        {
+            printf("\n PageFaultException occurred \n");    
+        }
+        else if ( which == AddressErrorException )
+        {
+            printf("\n AddressErrorException occurred \n");
+        }
+        
         
 
 
@@ -199,10 +207,12 @@ ExceptionHandler(ExceptionType which)
         printf("BusErrorException\n");
         sysExitHandler(-1);
     }
-    else if(which == AddressErrorException){
-        printf("AddressErrorException\n");
-        sysExitHandler(-1);
-    }
+
+
+    // else if(which == AddressErrorException){
+    //     printf("AddressErrorException\n");
+    //     sysExitHandler(-1);
+    // }
     else if(which == OverflowException){
         printf("OverflowException\n");
         sysExitHandler(-1);
