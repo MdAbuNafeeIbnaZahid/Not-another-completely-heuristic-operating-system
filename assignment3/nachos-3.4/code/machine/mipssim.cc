@@ -251,6 +251,8 @@ Machine::OneInstruction(Instruction *instr)
       case OP_LHU:	  
 	tmp = registers[instr->rs] + instr->extra;
 	if (tmp & 0x1) {
+
+		printf("\n (tmp & 0x1)  ....    raising AddressErrorException \n");
 	    RaiseException(AddressErrorException, tmp);
 	    return;
 	}
@@ -273,6 +275,9 @@ Machine::OneInstruction(Instruction *instr)
       case OP_LW:
 	tmp = registers[instr->rs] + instr->extra;
 	if (tmp & 0x3) {
+
+		printf("\n (tmp & 0x3)  ....    raising AddressErrorException \n");
+
 	    RaiseException(AddressErrorException, tmp);
 	    return;
 	}

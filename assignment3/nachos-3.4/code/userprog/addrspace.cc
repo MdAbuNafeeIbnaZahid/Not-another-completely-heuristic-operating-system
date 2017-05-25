@@ -401,12 +401,15 @@ int AddrSpace::loadIntoFreePage(int virtualAddr, int physicalPageNo)
 
     if ( isSwapPageExists(vpn) == TRUE )
     {
+        printf("\n swapPage exists \n");
         int swapPageNo = pageTable[vpn].swapPage;
         loadFromSwapSpace(vpn);
     }
 
     else // swap page doesn't exists
     {
+        printf("\n swap page doesn't exist \n");
+
         int byteLoaded = 0;
 
         int virtualAddrStart = vpn * PageSize;
@@ -417,6 +420,7 @@ int AddrSpace::loadIntoFreePage(int virtualAddr, int physicalPageNo)
         int i;
         for (i = virtualAddrStart; i <= virtualAddrEnd; i++)
         {
+            // printf("\ni = %d\n", i);
             int physicalAddress = physicalPageNo * PageSize + virtualAddr % PageSize;
             if ( (i >= noffH.code.virtualAddr) && (i < noffH.code.virtualAddr + noffH.code.size) )
             {
@@ -451,6 +455,8 @@ int AddrSpace::loadIntoFreePage(int virtualAddr, int physicalPageNo)
                 bzero(locationToClean, numBytesToClean);
             }
         }
+
+        printf("\n loop iterating all virtual addresses complete \n");
 
     }
 

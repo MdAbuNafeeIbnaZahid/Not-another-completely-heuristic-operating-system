@@ -127,12 +127,14 @@ ExceptionHandler(ExceptionType which)
     }
     else if(which == PageFaultException){
 
+        printf("\n PageFaultException occurred \n");
         
 
 
         // printf("\nPage Fault...\n");
         int faultingAddress = machine->ReadRegister(39);
-        // printf("\nfaultingAddress = %d\n", faultingAddress);
+        printf("\nfaultingAddress = %d\n", faultingAddress);
+        
         int vpn = faultingAddress / PageSize;
         // printf("\nvpn = %d\n", vpn);
         int physicalPageNo = -1;
@@ -157,23 +159,35 @@ ExceptionHandler(ExceptionType which)
             Thread *victimProcessThread = (Thread*)processManager->Get(victimProcessId);
 
 
-            if ( victimProcessThread->space->isSwapPageExists(victimVpn) ||
+            if ( (! victimProcessThread->space->isSwapPageExists(victimVpn) ) ||
                 victimTE->dirty == TRUE )
             {
                 // Need to load in swap
+                printf("\n Need to load in swap beforing evicting \n");
                 victimProcessThread->space->saveIntoSwapSpace(victimVpn);
+
+                printf("\n Loaded into swap memory \n");
+
             }
+
+            memoryManager->processMap[physicalPageNo] = (int)currentThread->processId;
+            memoryManager->entries[physicalPageNo] = &machine->pageTable[vpn];
+
+            printf("\n in AllocByForce keeping inverted info \n");
         }
 
 
-        
 
-        printf("\n faultingAddress = %d \n", faultingAddress);
+
+
+        
         printf("\n physicalPageNo = %d \n", physicalPageNo);
 
         // printf("\n before calling loadIntoFreePage \n");
         currentThread->space->loadIntoFreePage( faultingAddress, physicalPageNo );
 
+
+        printf("\n loaded the faulting address to a page \n");
 
         // Nafee : We will not exit process anymore 
         //sysExitHandler(-1);

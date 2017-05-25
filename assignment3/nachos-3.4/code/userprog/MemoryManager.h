@@ -19,9 +19,9 @@ class MemoryManager {
 
     Lock* lock;//for thread safety
 
-    int *processMap;
+    int victimCnt;
 
-    TranslationEntry **entries; 
+    
 public:
     /* Create a manager to track the allocation of numPages of physical memory.
     You will create one by calling the constructor with NumPhysPages as
@@ -49,6 +49,13 @@ public:
     int GetProcessIdFromPhysPageNum(int physPageNum);
 
     TranslationEntry *GetTranslationEntryFromPhysPageNum(int physPageNum);
+
+
+
+    // Nafee : 
+    int *processMap;
+
+    TranslationEntry **entries; 
 };
 
 

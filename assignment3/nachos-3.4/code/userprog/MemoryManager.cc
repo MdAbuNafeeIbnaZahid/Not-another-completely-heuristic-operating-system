@@ -7,6 +7,7 @@
 MemoryManager::MemoryManager(int numPages){
     this->numPages = numPages;
     this->numFreePages = numPages;
+    this->victimCnt = 0;
     pageStatus = new BitMap(this->numPages);
     lock = new Lock("ofk");
     processMap = new int[numPages];
@@ -90,7 +91,7 @@ bool MemoryManager::PageIsAllocated(int physPageNum){
 
 int MemoryManager::AllocByForce()
 {
-    return 0;
+    return (victimCnt++)%numPages;
 }
 
 int MemoryManager::GetProcessIdFromPhysPageNum(int physPageNum)

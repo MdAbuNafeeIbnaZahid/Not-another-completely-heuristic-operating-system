@@ -212,10 +212,21 @@ Machine::Translate(int virtAddr, int* physAddr, int size, bool writing)
         if (vpn >= pageTableSize) {
             DEBUG('a', "virtual page # %d too large for page table size %d!\n",
                 virtAddr, pageTableSize);
-            return AddressErrorException;
-        } else if (!pageTable[vpn].valid) {
-            DEBUG('a', "virtual page # %d too large for page table size %d!\n",
+
+            //Nafee 
+            printf("\n  virtual page # %d too large for page table size %d!\n",
                 virtAddr, pageTableSize);
+
+            return AddressErrorException;
+            
+        } else if (!pageTable[vpn].valid) {
+            DEBUG('a', "virtual page # %d is not valid !\n",
+                virtAddr);
+
+            //Nafee
+            printf("\n virtual page # %d is not valid !\n",
+                virtAddr);
+
             return PageFaultException;
         }
         entry = &pageTable[vpn];
