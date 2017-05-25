@@ -129,6 +129,7 @@ ExceptionHandler(ExceptionType which)
 
         
 
+
         // printf("\nPage Fault...\n");
         int faultingAddress = machine->ReadRegister(39);
         // printf("\nfaultingAddress = %d\n", faultingAddress);
@@ -150,8 +151,22 @@ ExceptionHandler(ExceptionType which)
             
 
             // handle swap file cases here
+            int victimProcessId = memoryManager->GetProcessIdFromPhysPageNum(physicalPageNo);
+            TranslationEntry *victimTE = memoryManager->GetTranslationEntryFromPhysPageNum(physicalPageNo);
+            int victimVpn = victimTE->virtualPage;
+            Thread *victimProcessThread = (Thread*)processManager->Get(victimProcessId);
 
+
+            if ( victimProcessThread->space->isSwapPageExists(victimVpn) ||
+                victimTE->dirty == TRUE )
+            {
+                // Need to load in swap
+                victimProcessThread->space->saveIntoSwapSpace(victimVpn);
+            }
         }
+
+
+        
 
         printf("\n faultingAddress = %d \n", faultingAddress);
         printf("\n physicalPageNo = %d \n", physicalPageNo);

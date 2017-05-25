@@ -397,52 +397,64 @@ int AddrSpace::loadIntoFreePage(int virtualAddr, int physicalPageNo)
     pageTable[vpn].physicalPage = physicalPageNo;
     pageTable[vpn].valid = TRUE;
     pageTable[vpn].isEverUsed = TRUE;
+    pageTable[vpn].dirty = FALSE;
 
-    int byteLoaded = 0;
-
-    int virtualAddrStart = vpn * PageSize;
-    int virtualAddrEnd = vpn * PageSize + PageSize -1;
-
-
-    int distFromBase = 0;
-    int i;
-    for (i = virtualAddrStart; i <= virtualAddrEnd; i++)
+    if ( isSwapPageExists(vpn) == TRUE )
     {
-        int physicalAddress = physicalPageNo * PageSize + virtualAddr % PageSize;
-        if ( (i >= noffH.code.virtualAddr) && (i < noffH.code.virtualAddr + noffH.code.size) )
-        {
-            distFromBase = i - noffH.code.virtualAddr;
-            char* buff = new char[ 10];
-            executable->ReadAt(buff, 1, noffH.code.inFileAddr + distFromBase);
-            loadIntoMemory(buff, 1, noffH.code.virtualAddr + distFromBase );
-            delete buff;
-        }
-        else if ( (i >= noffH.initData.virtualAddr) && (i < noffH.initData.virtualAddr + noffH.initData.size) )
-        {
-            distFromBase = i - noffH.initData.virtualAddr;
-            char* buff = new char[ 10];
-            executable->ReadAt(buff, 1, noffH.initData.inFileAddr + distFromBase);
-            loadIntoMemory(buff, 1, noffH.initData.virtualAddr + distFromBase );
-            delete buff;
-        }
-        else if ( (i >= noffH.uninitData.virtualAddr) && (i < noffH.uninitData.virtualAddr + noffH.uninitData.size) )
-        {
-            // Nafee : I am zeroing out the main memory as Sid sir instructed
-            char* locationToClean = &machine->mainMemory[ physicalAddress ];
-            int numBytesToClean = 1;
-
-            bzero(locationToClean, numBytesToClean);
-        }
-        else
-        {
-            // Nafee : I am zeroing out the main memory as Sid sir instructed
-            char* locationToClean = &machine->mainMemory[ physicalAddress ];
-            int numBytesToClean = 1;
-
-            bzero(locationToClean, numBytesToClean);
-        }
+        int swapPageNo = pageTable[vpn].swapPage;
+        loadFromSwapSpace(vpn);
     }
 
+    else // swap page doesn't exists
+    {
+        int byteLoaded = 0;
+
+        int virtualAddrStart = vpn * PageSize;
+        int virtualAddrEnd = vpn * PageSize + PageSize -1;
+
+
+        int distFromBase = 0;
+        int i;
+        for (i = virtualAddrStart; i <= virtualAddrEnd; i++)
+        {
+            int physicalAddress = physicalPageNo * PageSize + virtualAddr % PageSize;
+            if ( (i >= noffH.code.virtualAddr) && (i < noffH.code.virtualAddr + noffH.code.size) )
+            {
+                distFromBase = i - noffH.code.virtualAddr;
+                char* buff = new char[ 10];
+                executable->ReadAt(buff, 1, noffH.code.inFileAddr + distFromBase);
+                loadIntoMemory(buff, 1, noffH.code.virtualAddr + distFromBase );
+                delete buff;
+            }
+            else if ( (i >= noffH.initData.virtualAddr) && (i < noffH.initData.virtualAddr + noffH.initData.size) )
+            {
+                distFromBase = i - noffH.initData.virtualAddr;
+                char* buff = new char[ 10];
+                executable->ReadAt(buff, 1, noffH.initData.inFileAddr + distFromBase);
+                loadIntoMemory(buff, 1, noffH.initData.virtualAddr + distFromBase );
+                delete buff;
+            }
+            else if ( (i >= noffH.uninitData.virtualAddr) && (i < noffH.uninitData.virtualAddr + noffH.uninitData.size) )
+            {
+                // Nafee : I am zeroing out the main memory as Sid sir instructed
+                char* locationToClean = &machine->mainMemory[ physicalAddress ];
+                int numBytesToClean = 1;
+
+                bzero(locationToClean, numBytesToClean);
+            }
+            else
+            {
+                // Nafee : I am zeroing out the main memory as Sid sir instructed
+                char* locationToClean = &machine->mainMemory[ physicalAddress ];
+                int numBytesToClean = 1;
+
+                bzero(locationToClean, numBytesToClean);
+            }
+        }
+
+    }
+
+    
     
 
 
