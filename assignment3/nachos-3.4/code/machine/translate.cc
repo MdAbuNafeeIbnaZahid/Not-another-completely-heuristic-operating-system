@@ -196,6 +196,10 @@ Machine::Translate(int virtAddr, int* physAddr, int size, bool writing)
 // check for alignment errors
     if (((size == 4) && (virtAddr & 0x3)) || ((size == 2) && (virtAddr & 0x1))){
         DEBUG('a', "alignment problem at %d, size %d!\n", virtAddr, size);
+
+        // Nafee
+        printf("\n alignment error detected inside Translate function \n");
+
         return AddressErrorException;
     }
     

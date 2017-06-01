@@ -125,7 +125,7 @@ ExceptionHandler(ExceptionType which)
         
 
     }
-    else if( (which == PageFaultException)  || (which==AddressErrorException) )
+    else if( (which == PageFaultException)  )
     {
         if ( which == PageFaultException )
         {
@@ -178,10 +178,14 @@ ExceptionHandler(ExceptionType which)
 
             }
 
+
+            // Nafee : Adding this line too late.
+            victimTE->valid = FALSE;
+
             memoryManager->processMap[physicalPageNo] = (int)currentThread->processId;
             memoryManager->entries[physicalPageNo] = &machine->pageTable[vpn];
 
-            printf("\n in AllocByForce keeping inverted info \n");
+            printf("\n keeping inverted info while forcing a page out \n");
         }
 
 
@@ -200,6 +204,12 @@ ExceptionHandler(ExceptionType which)
         // Nafee : We will not exit process anymore 
         //sysExitHandler(-1);
     }
+    else if ( which == AddressErrorException )
+    {
+        printf("\n AddressErrorException \n");
+        sysExitHandler(-1);
+    }
+
     else if(which == ReadOnlyException){
         printf("ReadOnlyException\n");
         sysExitHandler(-1);
@@ -359,6 +369,9 @@ int sysExecHandler(unsigned int execNameVirAddr){
 
 
 int sysExitHandler(int returnValue){
+
+    printf("\n starting of sysExitHandler. returnValue = %d \n", returnValue);
+
     //frees the allocated pages. 
     int ptSize = machine->pageTableSize;
     TranslationEntry* pageTable = machine->pageTable;
@@ -370,7 +383,7 @@ int sysExitHandler(int returnValue){
 
     ///Me: todo: free the allocated page frames
     for (int i = 0; i < machine->pageTableSize; ++i) {
-        if ( machine->pageTable[i].valid ) // Nafee : only freeing the valid pages as 
+        if ( machine->pageTable[i].valid == TRUE ) // Nafee : only freeing the valid pages as 
             // sid sir instructed
         {
             // printf("\n Got a valid page \n");
