@@ -36,6 +36,7 @@ class TranslationEntry {
     //Nafee:
     int swapPage;
     bool isEverUsed;
+    int whenLastUsed;
 
 
 

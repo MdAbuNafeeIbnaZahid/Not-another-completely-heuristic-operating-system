@@ -155,7 +155,7 @@ ExceptionHandler(ExceptionType which)
         else
         {
             // will force to free a page
-            printf("\n forcing a page out \n");
+            printf("\n Free page is not available. Need to evict a page \n");
             physicalPageNo = memoryManager->AllocByForce();
 
             
@@ -171,10 +171,10 @@ ExceptionHandler(ExceptionType which)
                 victimTE->dirty == TRUE )
             {
                 // Need to load in swap
-                printf("\n Need to load in swap beforing evicting \n");
+                // printf("\n Need to load in swap beforing evicting \n");
                 victimProcessThread->space->saveIntoSwapSpace(victimVpn);
 
-                printf("\n Loaded into swap memory \n");
+                // printf("\n Loaded into swap memory \n");
 
             }
 
@@ -185,7 +185,7 @@ ExceptionHandler(ExceptionType which)
             memoryManager->processMap[physicalPageNo] = (int)currentThread->processId;
             memoryManager->entries[physicalPageNo] = &machine->pageTable[vpn];
 
-            printf("\n keeping inverted info while forcing a page out \n");
+            // printf("\n keeping inverted info while forcing a page out \n");
         }
 
 
@@ -193,13 +193,13 @@ ExceptionHandler(ExceptionType which)
 
 
         
-        printf("\n physicalPageNo = %d \n", physicalPageNo);
+        // printf("\n physicalPageNo = %d \n", physicalPageNo);
 
         // printf("\n before calling loadIntoFreePage \n");
         currentThread->space->loadIntoFreePage( faultingAddress, physicalPageNo );
 
 
-        printf("\n loaded the faulting address to a page \n");
+        printf("\n loaded the faulting page to page frame no %d \n", physicalPageNo);
 
         // Nafee : We will not exit process anymore 
         //sysExitHandler(-1);

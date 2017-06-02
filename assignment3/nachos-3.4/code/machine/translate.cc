@@ -228,8 +228,7 @@ Machine::Translate(int virtAddr, int* physAddr, int size, bool writing)
                 virtAddr);
 
             //Nafee
-            printf("\n virtual page # %d is not valid !\n",
-                virtAddr);
+            // printf("\n virtual page # %d is not valid !\n", virtAddr);
 
             return PageFaultException;
         }
