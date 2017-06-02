@@ -182,6 +182,15 @@ class Machine {
     TranslationEntry *pageTable;
     unsigned int pageTableSize;
 
+
+
+    // Nafee :
+    int refCnt;
+    int hitCnt;
+    int missCnt;
+
+
+
   private:
     bool singleStep;		// drop back into the debugger after each
 				// simulated instruction

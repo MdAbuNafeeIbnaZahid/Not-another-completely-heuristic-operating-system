@@ -127,17 +127,11 @@ ExceptionHandler(ExceptionType which)
     }
     else if( (which == PageFaultException)  )
     {
-        if ( which == PageFaultException )
-        {
-            printf("\n PageFaultException occurred \n");    
-        }
-        else if ( which == AddressErrorException )
-        {
-            printf("\n AddressErrorException occurred \n");
-        }
-        
-        
+        machine->missCnt++;
 
+        printf("\n PageFaultException occurred \n");    
+        printf("\n machine->hitCnt = %d \n", machine->hitCnt );
+        printf("\n machine->missCnt = %d \n", machine->missCnt );
 
         // printf("\nPage Fault...\n");
         int faultingAddress = machine->ReadRegister(39);

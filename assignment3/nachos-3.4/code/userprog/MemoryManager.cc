@@ -91,7 +91,20 @@ bool MemoryManager::PageIsAllocated(int physPageNum){
 
 int MemoryManager::AllocByForce()
 {
-    return (victimCnt++)%numPages;
+    // return (victimCnt++)%numPages;  // it was roung robin page replacement policy
+
+
+
+    // Nafee : LRU is implemented
+    int i, victim = 0;
+    for (i = 0;  i < numPages; i++)
+    {
+        if ( entries[i]->whenLastUsed < entries[victim]->whenLastUsed )
+        {
+            victim = i;
+        }
+    }
+    return victim;
 }
 
 int MemoryManager::GetProcessIdFromPhysPageNum(int physPageNum)

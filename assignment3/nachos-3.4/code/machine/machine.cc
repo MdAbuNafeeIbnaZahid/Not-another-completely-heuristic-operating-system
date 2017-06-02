@@ -71,6 +71,13 @@ Machine::Machine(bool debug)
     pageTable = NULL;
 #endif
 
+
+    // Nafee : These 3 variables are for LRU, hit count, miss count
+    refCnt = 0;
+    hitCnt = 0;
+    missCnt = 0;
+
+
     singleStep = debug;
     CheckEndian();
 }

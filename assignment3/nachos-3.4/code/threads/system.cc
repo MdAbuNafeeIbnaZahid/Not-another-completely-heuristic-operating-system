@@ -40,10 +40,7 @@ SynchDisk   *synchDisk;
     // Nafee :
     char *swapMemory;
     MemoryManager *swapMemoryManager;
-    int refCnt = 0;
-    int hitCnt = 0;
-    int missCnt = 0;
-
+    
 
     ///me: for console
     ConsoleData myConsole;
